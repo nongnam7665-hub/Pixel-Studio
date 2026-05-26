@@ -3,7 +3,7 @@ services:
     name: studio-booking
     runtime: node
     buildCommand: ""
-    startCommand: node SRC/server.js
+    startCommand: node --experimental-sqlite SRC/server.js
     envVars:
       - key: NODE_VERSION
-        value: 22.5.0
+        value: 22.15.0
