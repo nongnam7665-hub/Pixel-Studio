@@ -1,4 +1,12 @@
-﻿const btnRegister = document.getElementById('btnRegister');
+function getApiBase() {
+    const { protocol, hostname, port, origin } = window.location;
+    if (protocol === 'file:') return 'http://127.0.0.1:3000';
+    if ((hostname === '127.0.0.1' || hostname === 'localhost') && port && port !== '3000')
+        return `${protocol}//${hostname}:3000`;
+    return origin;
+}
+
+const btnRegister = document.getElementById('btnRegister');
 
 if (btnRegister) {
     btnRegister.addEventListener('click', async () => {
@@ -25,7 +33,7 @@ if (btnRegister) {
             // มัดรวมข้อมูลส่งไปหลังบ้าน
             const userData = { firstName, lastName, phone, email, password };
 
-            const response = await fetch('https://pixle-studio.onrender.com/api/register', {
+            const response = await fetch(getApiBase() + '/api/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData)
@@ -37,12 +45,12 @@ if (btnRegister) {
                 alert('สมัครสมาชิกสำเร็จเรียบร้อยแล้ว!');
                 window.location.href = 'index.html';
             } else {
-                alert(result.message || 'สมัครสมาชิกไม่สำเร็จ');
+                alert(result.error || result.message || 'สมัครสมาชิกไม่สำเร็จ');
             }
 
         } catch (error) {
             console.error('Error:', error);
-            alert('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์หลังบ้าน');
+            alert('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์');
         }
     });
 }
