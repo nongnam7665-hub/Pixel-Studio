@@ -1,0 +1,94 @@
+/* ── Stat Cards ── */
+.stat-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 130px;
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.stat-num {
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.s-pending   { 
+  background: #fff3cd; 
+  color: #856404; 
+}
+.s-approved  { 
+  background: #d1f5e0; 
+  color: #1a6e3c; }
+.s-active    { 
+  background: #cfe2ff; 
+  color: #0a3d91; }
+.s-completed { 
+  background: #e2e3e5; 
+  color: #383d41; }
+.s-cancelled { 
+  background: #f8d7da; 
+  color: #842029; }
+
+/* ── Countdown Timer ── */
+.countdown-cell { 
+  text-align: center; 
+  min-width: 130px; 
+}
+.cd-timer { 
+  font-family: monospace; 
+  font-size: 1.05rem; 
+  font-weight: 800; 
+  letter-spacing: 1px; 
+  display: block; 
+}
+.cd-green  { 
+  color: #1a6e3c; }
+.cd-yellow { 
+  color: #856404; }
+.cd-red    { 
+  color: #842029; 
+  animation: pulse-red 1s infinite; 
+}
+.cd-done   { 
+  color: #842029; 
+  font-size: 0.85rem; 
+  font-weight: 700; 
+}
+.cd-na     { 
+  color: #aaa; 
+  font-size: 0.85rem; 
+}
+@keyframes pulse-red { 
+  0%, 100% { opacity: 1; } 50% { opacity: 0.45; } 
+}
+.cd-bar-wrap { 
+  height: 5px; 
+  background: rgba(0,0,0,0.08); 
+  border-radius: 999px; 
+  margin-top: 4px; 
+  overflow: hidden; 
+}
+.cd-bar { 
+  height: 100%; 
+  border-radius: 999px; 
+  transition: width 1s linear, background 0.5s; }
+.end-time-label { 
+  font-size: 0.75rem; 
+  color: #9b6bc5; 
+  display: block; 
+  margin-top: 2px; 
+}
+.auto-returned-row td { 
+  background: rgba(209,245,224,0.35) !important; 
+}

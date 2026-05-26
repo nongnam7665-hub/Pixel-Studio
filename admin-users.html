@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ข้อมูลสมาชิก</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <header class="admin-header">
+    <div class="header-brand">
+      <img src="pic/Logo.png" alt="logo" class="header-logo">
+      <span class="header-title">ระบบผู้ดูแล</span>
+    </div>
+    <div class="header-user">
+      <span class="admin-greeting">สวัสดี, <strong id="adminName">ผู้ดูแลระบบ</strong></span>
+      <button id="logoutBtn" class="logout-btn">ออกจากระบบ</button>
+    </div>
+  </header>
+
+  <nav class="admin-tabs">
+    <a href="admin-users.html"    class="tab-btn active">สมาชิก</a>
+    <a href="admin-rooms.html"    class="tab-btn">ห้องสตูดิโอ</a>
+    <a href="admin-packages.html" class="tab-btn">แพ็กเกจ</a>
+    <a href="admin-bookings.html" class="tab-btn">การเช่า</a>
+    <a href="admin-payments.html" class="tab-btn">การชำระเงิน</a>
+    <a href="admin-approval.html" class="tab-btn">การอนุมัติ</a>
+    <a href="admin-status.html"   class="tab-btn">สถานะการเช่า</a>
+    <a href="admin-returns.html"  class="tab-btn">การคืนห้อง</a>
+    <a href="user/home.html"      class="tab-btn" style="margin-left:auto;background:#6a0dad;color:#fff;">🌐 ดูเว็บไซต์</a>
+  </nav>
+
+  <main class="admin-content">
+    <section class="tab-panel active">
+      <div class="panel-header">
+        <h2>ข้อมูลสมาชิก</h2>
+        <button class="refresh-btn" onclick="loadUsers()">รีเฟรช</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>ชื่อ</th>
+              <th>นามสกุล</th>
+              <th>อีเมล</th>
+              <th>เบอร์โทร</th>
+              <th>วันที่สมัคร</th>
+              <th>จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal แก้ไขสมาชิก -->
+  <div id="modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 class="modal-title">แก้ไขข้อมูลสมาชิก</h3>
+      <input type="hidden" id="edit-id">
+      <div class="form-group">
+        <label>ชื่อ</label>
+        <input type="text" id="edit-firstName" placeholder="ชื่อ">
+      </div>
+      <div class="form-group">
+        <label>นามสกุล</label>
+        <input type="text" id="edit-lastName" placeholder="นามสกุล">
+      </div>
+      <div class="form-group">
+        <label>อีเมล</label>
+        <input type="email" id="edit-email" placeholder="อีเมล">
+      </div>
+      <div class="form-group">
+        <label>เบอร์โทร</label>
+        <input type="text" id="edit-phone" placeholder="เบอร์โทร">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
+        <button class="btn-save" onclick="saveUser()">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/admin-users.js"></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ชำระเงิน</title>
+    <link rel="stylesheet" href="css/user-base.css">
+    <link rel="stylesheet" href="css/payment.css">
+</head>
+
+<body>
+    <nav class="Navbar">
+        <div class="brand-wrap">
+            <a href="home.html" class="logo">
+                <img src="pic/Logo.png" alt="logo" class="logo-img">
+                <span class="logo-text">สตูดิโอ</span>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="home.html">หน้าแรก</a></li>
+            <li><a href="package.html">แพ็กเกจ</a></li>
+            <li><a href="studio.html">สตูดิโอ</a></li>
+            <li><a href="index.html" id="logoutLink">ออกจากระบบ</a></li>
+        </ul>
+    </nav>
+
+    <main class="page-shell">
+        <section class="payment-section">
+            <div class="payment-header">
+                <span class="step-label">ขั้นตอนสุดท้าย</span>
+                <h1>ชำระเงินและยืนยันการจอง</h1>
+                <p>เลือกวิธีชำระเงิน ตรวจสอบยอดรวม แล้วส่งหลักฐานเพื่อให้ทีมงานยืนยันคิวของคุณ</p>
+            </div>
+
+            <div class="payment-layout">
+                <form class="payment-form" id="paymentForm">
+
+                    <div class="form-panel">
+                        <h2>วิธีชำระเงิน</h2>
+                        <div class="payment-methods">
+                            <label class="method-card">
+                                <input type="radio" name="paymentMethod" value="PromptPay / Bank Transfer" checked>
+                                <span class="method-icon">PP</span>
+                                <span>
+                                    <strong>PromptPay / บัญชีธนาคาร</strong>
+                                    <small>สแกนพร้อมเพย์หรือโอนเข้าบัญชีสตูดิโอ</small>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-panel payment-detail" id="paymentDetail">
+                        <h2>ข้อมูลการโอน</h2>
+                        <div class="qr-box">
+                            <div class="qr-pattern" aria-label="PromptPay QR"></div>
+                            <p>PromptPay: 099-999-9999</p>
+                        </div>
+                        <div class="bank-info">
+                            <p><span>ชื่อบัญชี</span><strong>Studio Booking</strong></p>
+                            <p><span>ธนาคาร</span><strong>กสิกรไทย</strong></p>
+                            <p><span>เลขบัญชี</span><strong>123-4-56789-0</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="form-panel">
+                        <h2>หลักฐานการชำระเงิน</h2>
+                        <div class="form-grid">
+                            <label class="form-field">
+                                <span>ชื่อผู้โอน</span>
+                                <input type="text" id="payerName" placeholder="ชื่อ-นามสกุล" required>
+                            </label>
+                            <label class="form-field">
+                                <span>เบอร์โทรศัพท์</span>
+                                <input type="tel" id="payerPhone" placeholder="0XX-XXX-XXXX" required>
+                            </label>
+                            <label class="form-field">
+                                <span>วันที่ชำระเงิน</span>
+                                <input type="text" id="paymentDateDisplay" placeholder="วว/ดด/ปปปป" maxlength="10" inputmode="numeric" autocomplete="off" required>
+                                <input type="hidden" id="paymentDate">
+                            </label>
+                            <label class="form-field">
+                                <span>เวลาโอน</span>
+                                <input type="time" id="paymentTime" required>
+                            </label>
+                            <label class="form-field">
+                                <span>จำนวนเงิน</span>
+                                <input type="number" id="paidAmount" min="1" placeholder="0" required>
+                            </label>
+                        </div>
+                        <label class="upload-field">
+                            <span>แนบสลิปการโอน</span>
+                            <input type="file" id="paymentSlip" accept="image/*,.pdf">
+                        </label>
+                        <textarea id="paymentNote" rows="4" placeholder="หมายเหตุเพิ่มเติม เช่น ชำระมัดจำ หรือชำระเต็มจำนวน"></textarea>
+                    </div>
+                </form>
+            </div>
+
+            <aside class="booking-summary">
+                <h2>สรุปรายการจอง</h2>
+                <div id="bookingSummary" class="summary-list"></div>
+                <div class="total-row">
+                    <span>ยอดรวมทั้งหมด</span>
+                    <strong id="fullTotal">0 บาท</strong>
+                </div>
+                <div class="total-row">
+                    <span>มัดจำ 30%</span>
+                    <strong id="depositAmount">0 บาท</strong>
+                </div>
+                <button type="submit" form="paymentForm" class="confirm-btn">ยืนยันการชำระเงิน</button>
+                <a href="checkout.html" class="edit-link" id="editBookingLink">แก้ไขรายการจอง</a>
+            </aside>
+        </section>
+    </main>
+
+    <div class="success-modal" id="successModal" hidden>
+        <div class="success-card">
+            <span class="success-icon">OK</span>
+            <h2>ส่งข้อมูลชำระเงินแล้ว</h2>
+            <p>ดาวน์โหลดสลิปบิลเก็บไว้เป็นหลักฐานได้ทันที</p>
+            <div class="receipt-preview" id="receiptPreview"></div>
+            <button type="button" class="download-receipt-btn" id="downloadReceiptBtn">ดาวน์โหลดสลิปบิล</button>
+            <a href="payment.html">กลับหน้าชำระเงิน</a>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script src="js/payment.js"></script>
+</body>
+
+</html>

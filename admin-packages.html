@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ข้อมูลแพ็กเกจ</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/admin-packages.css">
+</head>
+<body>
+
+  <header class="admin-header">
+    <div class="header-brand">
+      <img src="pic/Logo.png" alt="logo" class="header-logo">
+      <span class="header-title">ระบบผู้ดูแล</span>
+    </div>
+    <div class="header-user">
+      <span class="admin-greeting">สวัสดี, <strong id="adminName">ผู้ดูแลระบบ</strong></span>
+      <button id="logoutBtn" class="logout-btn">ออกจากระบบ</button>
+    </div>
+  </header>
+
+  <nav class="admin-tabs">
+    <a href="admin-users.html"    class="tab-btn">สมาชิก</a>
+    <a href="admin-rooms.html"    class="tab-btn">ห้องสตูดิโอ</a>
+    <a href="admin-packages.html" class="tab-btn active">แพ็กเกจ</a>
+    <a href="admin-bookings.html" class="tab-btn">การเช่า</a>
+    <a href="admin-payments.html" class="tab-btn">การชำระเงิน</a>
+    <a href="admin-approval.html" class="tab-btn">การอนุมัติ</a>
+    <a href="admin-status.html"   class="tab-btn">สถานะการเช่า</a>
+    <a href="admin-returns.html"  class="tab-btn">การคืนห้อง</a>
+    <a href="user/home.html"      class="tab-btn" style="margin-left:auto;background:#6a0dad;color:#fff;">🌐 ดูเว็บไซต์</a>
+  </nav>
+
+  <main class="admin-content">
+    <section class="tab-panel active">
+      <div class="panel-header">
+        <h2>ข้อมูลแพ็กเกจ</h2>
+        <button class="refresh-btn" onclick="loadPackages()">รีเฟรช</button>
+      </div>
+      <div class="packages-grid" id="packages-grid"></div>
+    </section>
+  </main>
+
+  <!-- Modal แก้ไขแพ็กเกจ -->
+  <div id="modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 class="modal-title">แก้ไขแพ็กเกจ</h3>
+      <input type="hidden" id="edit-id">
+
+      <!-- รูปภาพ -->
+      <div class="form-group">
+        <label>รูปภาพแพ็กเกจ</label>
+        <div class="img-upload-area" onclick="document.getElementById('file-input').click()">
+          <img id="img-preview" class="img-preview" alt="ตัวอย่างรูป">
+          <div id="upload-placeholder">
+            <div style="font-size:2rem; color:#b07ee8;">📷</div>
+            <div class="upload-hint">คลิกเพื่อเลือกรูปภาพ</div>
+            <div class="upload-hint">JPG, PNG, WEBP</div>
+          </div>
+          <input type="file" id="file-input" accept="image/*" onchange="onFileSelected(event)">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>ชื่อแพ็กเกจ</label>
+        <input type="text" id="edit-name" placeholder="ชื่อแพ็กเกจ">
+      </div>
+      <div class="form-group">
+        <label>คำอธิบาย</label>
+        <textarea id="edit-description" placeholder="คำอธิบายแพ็กเกจ"></textarea>
+      </div>
+      <div class="form-group">
+        <label>ระยะเวลา</label>
+        <input type="text" id="edit-duration" placeholder="เช่น 3 ชั่วโมง">
+      </div>
+      <div class="form-group">
+        <label>ราคาเดิม (บาท)</label>
+        <input type="number" id="edit-old-price" min="0">
+      </div>
+      <div class="form-group">
+        <label>ราคาใหม่ (บาท)</label>
+        <input type="number" id="edit-new-price" min="0">
+      </div>
+      <div class="form-group">
+        <label>ป้ายกำกับ (badge) <span style="font-weight:400;color:#9b6bc5;">เช่น แนะนำ, VIP (ว่างเว้นหากไม่ต้องการ)</span></label>
+        <input type="text" id="edit-badge" placeholder="แนะนำ / VIP / ...">
+      </div>
+      <div class="form-group">
+        <label>รายการสิ่งที่รวมอยู่</label>
+        <div class="features-list" id="features-list"></div>
+        <button type="button" class="btn-add-feature" onclick="addFeatureRow('')">+ เพิ่มรายการ</button>
+      </div>
+      <div class="form-group">
+        <div class="form-check-row">
+          <input type="checkbox" id="edit-is-promo">
+          <label for="edit-is-promo">แสดงในส่วนโปรโมชั่นหน้าแรก</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>ลำดับการแสดง (น้อย = แสดงก่อน)</label>
+        <input type="number" id="edit-sort-order" min="0">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
+        <button class="btn-save" onclick="savePackage()">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/admin-packages.js"></script>
+</body>
+</html>

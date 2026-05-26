@@ -1,0 +1,21 @@
+# Database (ข้อมูลจริง ไม่ควรขึ้น GitHub)
+SRC/database.db
+SRC/database.db-shm
+SRC/database.db-wal
+*.db
+*.db-shm
+*.db-wal
+
+# รูปภาพที่ upload ขึ้นมา (อาจหนักเกินไป)
+pic/slips/
+
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db

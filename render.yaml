@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: studio-booking
+    runtime: node
+    buildCommand: ""
+    startCommand: node SRC/server.js
+    envVars:
+      - key: NODE_VERSION
+        value: 22.5.0

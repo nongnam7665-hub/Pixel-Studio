@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สมัครสมาชิก</title>
+    <link rel="stylesheet" href="css/register.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <div class="wrapper">
+        <a href="index.html" class="back-btn">
+            <i class='bx bx-chevron-left toggle'></i>
+        </a>
+        <form>
+            <img src="pic/Logo.png" class="login-title" alt="Pixel Studio">
+            <div class="input-box">
+                <input id="name" type="text" placeholder="ชื่อ" required>
+                <i class='bx bxs-user'></i>
+            </div>
+            <div class="input-box">
+                <input id="surname" type="text" placeholder="นามสกุล" required>
+                <i class='bx bxs-user'></i>
+            </div>
+            <div class="input-box">
+                <input id="phone" type="tel" placeholder="เบอร์โทร" required>
+                <i class='bx bx-phone'></i>
+            </div>
+            <div class="input-box">
+                <input id="email" type="email" placeholder="อีเมล" required>
+                <i class="bx bx-envelope"></i>
+            </div>
+            <div class="input-box">
+                <input id="password" type="password" placeholder="รหัสผ่าน" required>
+                <i class='bx bxs-lock-alt'></i>
+            </div>
+            <div class="input-box">
+                <input id="confirmPassword" type="password" placeholder="ยืนยันรหัสผ่าน" required>
+                <i class='bx bxs-lock-alt'></i>
+            </div>
+            <button type="button" id="btnRegister" class="btn">สมัครสมาชิก</button>
+        </form>
+    </div>
+    <script src="js/register.js"></script>
+</body>
+
+</html>

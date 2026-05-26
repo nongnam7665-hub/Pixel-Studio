@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หน้าแรก</title>
+    <link rel="stylesheet" href="css/user-base.css">
+    <link rel="stylesheet" href="css/home.css">
+</head>
+
+<body>
+    <nav class="Navbar">
+        <div class="brand-wrap">
+            <a href="#" class="logo">
+                <img src="pic/Logo.png" alt="logo" class="logo-img">
+                <span class="logo-text" id="welcomeText"></span>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="home.html">หน้าแรก</a></li>
+            <li><a href="package.html">แพ็กเกจ</a></li>
+            <li><a href="studio.html">สตูดิโอ</a></li>
+            <li><a href="index.html" id="logoutLink">ออกจากระบบ</a></li>
+        </ul>
+    </nav>
+
+    <main class="page-shell">
+        <section class="promo-section">
+            <div class="promo-header">
+                <h1>โปรโมชั่น !!</h1>
+                <span class="promo-pill"></span>
+                <a href="package.html" class="promo-link">ดูทั้งหมด</a>
+            </div>
+
+            <div class="promo-list" id="promo-list">
+                <!-- โหลดจาก API -->
+            </div>
+
+            <div class="promo-footer">
+                <a href="package.html" class="see-more-btn">See More</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="main.js"></script>
+    <script src="js/home.js"></script>
+</body>
+
+</html>

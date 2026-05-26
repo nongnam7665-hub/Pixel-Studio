@@ -1,0 +1,22 @@
+{
+  "name": "studio-booking",
+  "version": "1.0.0",
+  "description": "Studio booking website with package, custom studio, payment, and receipt pages.",
+  "private": true,
+  "main": "SRC/server.js",
+  "scripts": {
+    "start": "node SRC/server.js",
+    "dev": "node SRC/server.js",
+    "check": "node --check SRC/server.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "keywords": [
+    "studio",
+    "booking",
+    "payment"
+  ],
+  "author": "",
+  "license": "ISC"
+}

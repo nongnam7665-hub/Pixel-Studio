@@ -1,0 +1,112 @@
+/* ── Slip Viewer ── */
+.slip-thumb { 
+    width: 48px; 
+    height: 48px;
+    object-fit: cover; 
+    border-radius: 8px; 
+    border: 2px solid rgba(106,24,212,0.15); 
+    cursor: pointer; 
+    transition: transform 0.15s; 
+    display: block; 
+}
+.slip-thumb:hover { 
+    transform: scale(1.08); 
+}
+
+.btn-slip { 
+    padding: 5px 12px; 
+    background: #ece9ff; 
+    color: #5d22b2; 
+    border: none; 
+    border-radius: 8px; 
+    font-family: inherit; 
+    font-size: 0.8rem; 
+    font-weight: 700; 
+    cursor: pointer; 
+    transition: background 0.2s; 
+}
+.btn-slip:hover { 
+    background: #d8d0f7;
+}
+
+#slip-modal { 
+    z-index: 1100; 
+}
+
+.slip-modal-box { 
+    background: #fff; 
+    border-radius: 20px; 
+    padding: 24px; 
+    width: min(600px, 94vw); 
+    max-height: 90vh; 
+    overflow-y: auto;
+    box-shadow: 0 24px 64px rgba(74,14,160,0.3); 
+}
+.slip-modal-box h3 { 
+    color: #5d22b2; 
+    font-size: 1.1rem; 
+    font-weight: 800; 
+    margin-bottom: 16px; 
+}
+
+.slip-img-viewer { 
+    width: 100%; 
+    max-height: 60vh; 
+    object-fit: contain; 
+    border-radius: 12px; 
+    border: 2px solid rgba(106,24,212,0.12);
+    display: block; 
+}
+.slip-meta { 
+    margin-top: 14px; 
+    font-size: 0.85rem; 
+    color: #7d3fab; 
+    line-height: 1.8; 
+}
+.slip-actions { 
+    display: flex; 
+    gap: 10px; 
+    margin-top: 16px; 
+    justify-content: flex-end;
+}
+
+.btn-open-new { 
+    padding: 9px 20px; 
+    background: linear-gradient(135deg, #6a18d4, #8b5cf6); 
+    color: #fff; 
+    border: none; 
+    border-radius: 999px; 
+    font-family: inherit; 
+    font-size: 0.88rem; 
+    font-weight: 700; 
+    cursor: pointer; 
+    text-decoration: none; 
+    display: inline-block; 
+}
+
+/* ── Payment Pills ── */
+.payment-pill { 
+    display: inline-flex; 
+    align-items: center;
+    gap: 6px; 
+    padding: 3px 10px; 
+    border-radius: 999px; 
+    font-size: 0.78rem; 
+    font-weight: 700; 
+}
+.pay-pending  { 
+    background: #fff3cd; 
+    color: #856404; 
+}
+.pay-verified { 
+    background: #d1f5e0; 
+    color: #1a6e3c; 
+}
+.pay-rejected { 
+    background: #f8d7da; 
+    color: #842029; 
+}
+.pay-none     { 
+    background: #f0f0f0; 
+    color: #888; 
+}

@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ข้อมูลห้องสตูดิโอ</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/admin-rooms.css">
+</head>
+<body>
+
+  <header class="admin-header">
+    <div class="header-brand">
+      <img src="pic/Logo.png" alt="logo" class="header-logo">
+      <span class="header-title">ระบบผู้ดูแล</span>
+    </div>
+    <div class="header-user">
+      <span class="admin-greeting">สวัสดี, <strong id="adminName">ผู้ดูแลระบบ</strong></span>
+      <button id="logoutBtn" class="logout-btn">ออกจากระบบ</button>
+    </div>
+  </header>
+
+  <nav class="admin-tabs">
+    <a href="admin-users.html"    class="tab-btn">สมาชิก</a>
+    <a href="admin-rooms.html"    class="tab-btn active">ห้องสตูดิโอ</a>
+    <a href="admin-packages.html" class="tab-btn">แพ็กเกจ</a>
+    <a href="admin-bookings.html" class="tab-btn">การเช่า</a>
+    <a href="admin-payments.html" class="tab-btn">การชำระเงิน</a>
+    <a href="admin-approval.html" class="tab-btn">การอนุมัติ</a>
+    <a href="admin-status.html"   class="tab-btn">สถานะการเช่า</a>
+    <a href="admin-returns.html"  class="tab-btn">การคืนห้อง</a>
+    <a href="user/home.html"      class="tab-btn" style="margin-left:auto;background:#6a0dad;color:#fff;">🌐 ดูเว็บไซต์</a>
+  </nav>
+
+  <main class="admin-content">
+    <section class="tab-panel active">
+      <div class="panel-header">
+        <h2>ข้อมูลห้องสตูดิโอ</h2>
+        <button class="refresh-btn" onclick="loadRooms()">รีเฟรช</button>
+      </div>
+      <div class="rooms-grid" id="rooms-grid"></div>
+    </section>
+
+    <section class="tab-panel active" style="margin-top:32px;">
+      <div class="panel-header">
+        <h2>ธีมการถ่ายภาพ</h2>
+        <div style="display:flex;gap:8px;">
+          <button class="refresh-btn" onclick="loadThemes()">รีเฟรช</button>
+          <button class="btn-add-theme" onclick="openAddTheme()">+ เพิ่มธีม</button>
+        </div>
+      </div>
+      <div class="themes-admin-grid" id="themes-grid"></div>
+    </section>
+  </main>
+
+  <!-- Modal แก้ไขห้อง -->
+  <div id="modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 class="modal-title">แก้ไขข้อมูลห้องสตูดิโอ</h3>
+      <input type="hidden" id="edit-id">
+
+      <!-- รูปภาพ -->
+      <div class="form-group">
+        <label>รูปภาพห้อง</label>
+        <div class="img-upload-area" onclick="document.getElementById('file-input').click()">
+          <img id="img-preview" class="img-preview" alt="ตัวอย่างรูป">
+          <div id="upload-placeholder">
+            <div style="font-size:2rem; color:#b07ee8;">📷</div>
+            <div class="upload-hint">คลิกเพื่อเลือกรูปภาพ</div>
+            <div class="upload-hint">JPG, PNG, WEBP</div>
+          </div>
+          <input type="file" id="file-input" accept="image/*" onchange="onFileSelected(event)">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>ชื่อห้อง</label>
+        <input type="text" id="edit-name" placeholder="ชื่อห้อง">
+      </div>
+      <div class="form-group">
+        <label>คำอธิบาย</label>
+        <textarea id="edit-description" placeholder="คำอธิบาย"></textarea>
+      </div>
+      <div class="form-group">
+        <label>ความจุ (คน)</label>
+        <input type="number" id="edit-capacity" min="1" max="50">
+      </div>
+      <div class="form-group">
+        <label>สถานะ</label>
+        <select id="edit-status">
+          <option value="available">พร้อมใช้งาน</option>
+          <option value="unavailable">ไม่พร้อมใช้งาน</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
+        <button class="btn-save" onclick="saveRoom()">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal แก้ไข/เพิ่มธีม -->
+  <div id="theme-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 class="modal-title" id="theme-modal-title">แก้ไขธีม</h3>
+      <input type="hidden" id="theme-edit-id">
+
+      <div class="form-group" id="theme-slug-group">
+        <label>Slug (a-z, 0-9, ขีด เช่น my-theme)</label>
+        <input type="text" id="theme-edit-slug" placeholder="my-theme">
+      </div>
+
+      <div class="form-group">
+        <label>รูปภาพธีม <span style="color:#9b6bc5;font-size:0.82rem;">(ถ้าไม่ใส่จะใช้สีกราเดียนต์)</span></label>
+        <div class="img-upload-area" onclick="document.getElementById('theme-file-input').click()">
+          <img id="theme-img-preview" class="img-preview" alt="ตัวอย่าง">
+          <div id="theme-upload-placeholder">
+            <div style="font-size:2rem;color:#b07ee8;">🖼️</div>
+            <div class="upload-hint">คลิกเพื่อเลือกรูปภาพ</div>
+            <div class="upload-hint">JPG, PNG, WEBP</div>
+          </div>
+          <input type="file" id="theme-file-input" accept="image/*" onchange="onThemeFileSelected(event)">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>ชื่อธีม</label>
+        <input type="text" id="theme-edit-name" placeholder="ชื่อธีม">
+      </div>
+      <div class="form-group">
+        <label>คำอธิบาย</label>
+        <textarea id="theme-edit-description" placeholder="คำอธิบาย..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>ราคาเพิ่มเติม (บาท)</label>
+        <input type="number" id="theme-edit-price" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label>สีกราเดียนต์ซ้าย</label>
+        <div class="color-row">
+          <input type="color" id="theme-color1-picker" oninput="document.getElementById('theme-color1-text').value=this.value; updateThemePreview()">
+          <input type="text" id="theme-color1-text" placeholder="#ffffff" maxlength="7" oninput="if(/^#[0-9a-fA-F]{6}$/.test(this.value)){document.getElementById('theme-color1-picker').value=this.value;} updateThemePreview()">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>สีกราเดียนต์ขวา</label>
+        <div class="color-row">
+          <input type="color" id="theme-color2-picker" oninput="document.getElementById('theme-color2-text').value=this.value; updateThemePreview()">
+          <input type="text" id="theme-color2-text" placeholder="#f0f0f0" maxlength="7" oninput="if(/^#[0-9a-fA-F]{6}$/.test(this.value)){document.getElementById('theme-color2-picker').value=this.value;} updateThemePreview()">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>ตัวอย่างกราเดียนต์</label>
+        <div id="theme-gradient-preview" style="height:52px;border-radius:10px;border:1px solid rgba(106,24,212,0.15);"></div>
+      </div>
+      <div class="form-group">
+        <label>ลำดับแสดง</label>
+        <input type="number" id="theme-edit-sort" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:600;">
+          <input type="checkbox" id="theme-edit-active" checked style="width:auto;accent-color:#6a18d4;">
+          เปิดใช้งาน
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeThemeModal()">ยกเลิก</button>
+        <button class="btn-save" onclick="saveTheme()">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/admin-rooms.js"></script>
+</body>
+</html>

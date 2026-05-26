@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ข้อมูลการเช่า</title>
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <header class="admin-header">
+    <div class="header-brand">
+      <img src="pic/Logo.png" alt="logo" class="header-logo">
+      <span class="header-title">ระบบผู้ดูแล</span>
+    </div>
+    <div class="header-user">
+      <span class="admin-greeting">สวัสดี, <strong id="adminName">ผู้ดูแลระบบ</strong></span>
+      <button id="logoutBtn" class="logout-btn">ออกจากระบบ</button>
+    </div>
+  </header>
+
+  <nav class="admin-tabs">
+    <a href="admin-users.html"    class="tab-btn">สมาชิก</a>
+    <a href="admin-rooms.html"    class="tab-btn">ห้องสตูดิโอ</a>
+    <a href="admin-packages.html" class="tab-btn">แพ็กเกจ</a>
+    <a href="admin-bookings.html" class="tab-btn active">การเช่า</a>
+    <a href="admin-payments.html" class="tab-btn">การชำระเงิน</a>
+    <a href="admin-approval.html" class="tab-btn">การอนุมัติ</a>
+    <a href="admin-status.html"   class="tab-btn">สถานะการเช่า</a>
+    <a href="admin-returns.html"  class="tab-btn">การคืนห้อง</a>
+    <a href="user/home.html"      class="tab-btn" style="margin-left:auto;background:#6a0dad;color:#fff;">🌐 ดูเว็บไซต์</a>
+  </nav>
+
+  <main class="admin-content">
+    <section class="tab-panel active">
+      <div class="panel-header">
+        <h2>ข้อมูลการเช่าทั้งหมด</h2>
+        <button class="refresh-btn" onclick="loadBookings()">รีเฟรช</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>รหัสจอง</th>
+              <th>ชื่อผู้จอง</th>
+              <th>ห้อง</th>
+              <th>วันที่</th>
+              <th>เวลา</th>
+              <th>ธีม</th>
+              <th>คน</th>
+              <th>ราคา (บาท)</th>
+              <th>สถานะ</th>
+              <th>จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="bookings-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal แก้ไขการเช่า -->
+  <div id="modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 class="modal-title">แก้ไขข้อมูลการเช่า</h3>
+      <input type="hidden" id="edit-id">
+      <div class="form-group">
+        <label>ชื่อผู้จอง</label>
+        <input type="text" id="edit-customerName">
+      </div>
+      <div class="form-group">
+        <label>ห้อง</label>
+        <select id="edit-room">
+          <option value="A">ห้อง A</option>
+          <option value="B">ห้อง B</option>
+          <option value="C">ห้อง C</option>
+          <option value="D">ห้อง D</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>วันที่ถ่าย</label>
+        <input type="text" id="edit-shootDateDisplay" placeholder="วว/ดด/ปปปป" maxlength="10" inputmode="numeric" autocomplete="off">
+        <input type="hidden" id="edit-shootDate">
+      </div>
+      <div class="form-group">
+        <label>เวลา</label>
+        <input type="text" id="edit-bookingTime" placeholder="เช่น 10:00-13:00">
+      </div>
+      <div class="form-group">
+        <label>จำนวนคน</label>
+        <input type="number" id="edit-persons" min="1">
+      </div>
+      <div class="form-group">
+        <label>ธีม</label>
+        <input type="text" id="edit-themeName" placeholder="ธีม">
+      </div>
+      <div class="form-group">
+        <label>ราคารวม (บาท)</label>
+        <input type="number" id="edit-totalPrice" min="0">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
+        <button class="btn-save" onclick="saveBooking()">บันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/admin-bookings.js"></script>
+</body>
+</html>

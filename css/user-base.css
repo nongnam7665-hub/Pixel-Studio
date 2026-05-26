@@ -1,0 +1,115 @@
+﻿
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+  color: #33124f;
+}
+
+body::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('../pic/BG.jpg') no-repeat center/cover;
+  filter: blur(12px);
+  transform: scale(1.05);
+  z-index: -1;
+}
+
+ /*â”€â”€ Navbar â”€â”€*/
+.Navbar {
+  width: min(1200px, 96%);
+  margin: 50px auto 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 20px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(202, 162, 230, 0.35);
+  box-shadow: 0 16px 40px rgba(210, 173, 221, 0.2);
+}
+
+.brand-wrap {
+  flex-shrink: 0;
+}
+
+.logo {
+  color: #6a22c8;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 150%;
+  font-weight: 700;
+}
+
+.logo-text {
+  color: #5a1fb2;
+  font-weight: 700;
+}
+
+.logo-img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 20px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+  overflow-x: auto;
+}
+
+.nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-links li {
+  white-space: nowrap;
+}
+
+.nav-links li a {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 999px;
+  color: #6026b8;
+  text-decoration: none;
+  font-size: 1.09rem;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav-links li a:hover,
+.nav-links li a.active {
+  background: rgba(134, 74, 203, 0.12);
+  color: #4d1898;
+}
+
+/*â”€â”€ Page shell â”€â”€*/
+.page-shell {
+  width: min(1200px, 96%);
+  margin: 0 auto 32px;
+}
+
+/*â”€â”€ Responsive navbar â”€â”€*/
+@media (max-width: 960px) {
+  .Navbar {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+  }
+}

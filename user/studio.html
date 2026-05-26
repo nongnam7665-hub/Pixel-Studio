@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สตูดิโอ</title>
+    <link rel="stylesheet" href="../css/user-base.css">
+    <link rel="stylesheet" href="../css/studio.css">
+</head>
+
+<body>
+    <!-- แถบ Admin (แสดงเฉพาะเมื่อเข้าสู่ระบบในฐานะ Admin) -->
+    <div id="admin-bar" style="display:none;position:fixed;top:0;left:0;right:0;background:#4a0080;color:#fff;text-align:center;padding:8px 16px;z-index:9999;font-size:13px;letter-spacing:.3px;">
+        🔧 กำลังดูในโหมดผู้ดูแลระบบ &nbsp;|&nbsp;
+        <a href="../admin-users.html" style="color:#ffd700;font-weight:bold;text-decoration:none;">← กลับหน้า Admin</a>
+    </div>
+
+    <nav class="Navbar">
+        <div class="brand-wrap">
+            <a href="home.html" class="logo">
+                <img src="../pic/Logo.png" alt="logo" class="logo-img">
+                <span class="logo-text">สตูดิโอ</span>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="home.html">หน้าแรก</a></li>
+            <li><a href="package.html">แพ็กเกจ</a></li>
+            <li><a href="studio.html" class="active">สตูดิโอ</a></li>
+            <li><a href="../index.html" id="logoutLink">ออกจากระบบ</a></li>
+        </ul>
+    </nav>
+
+    <main class="page-shell">
+        <section class="studio-section">
+            <div class="studio-container">
+                <div class="studio-left">
+                    <h1>สร้างแพ็กเกจของคุณเอง</h1>
+                    <p class="studio-desc">เลือกทุกอย่างตามที่คุณต้องการ</p>
+
+                    <form class="studio-form" id="studioForm">
+                        <div class="form-section">
+                            <h2>ประเภทการถ่ายภาพ</h2>
+                            <div class="shoot-type-grid">
+                                <label class="shoot-type-card">
+                                    <input type="radio" name="shootType" value="profile" data-price="1500">
+                                    <div class="type-content">
+                                        <div class="type-icon">👤</div>
+                                        <h3>โปรไฟล์</h3>
+                                        <p>ถ่ายภาพส่วนตัว</p>
+                                        <span class="type-price">1,500 บาท</span>
+                                    </div>
+                                </label>
+
+                                <label class="shoot-type-card">
+                                    <input type="radio" name="shootType" value="couple" data-price="2500">
+                                    <div class="type-content">
+                                        <div class="type-icon">💑</div>
+                                        <h3>คู่รัก</h3>
+                                        <p>ถ่ายภาพคู่รัก</p>
+                                        <span class="type-price">2,500 บาท</span>
+                                    </div>
+                                </label>
+
+                                <label class="shoot-type-card">
+                                    <input type="radio" name="shootType" value="family" data-price="3000">
+                                    <div class="type-content">
+                                        <div class="type-icon">👨‍👩‍👧‍👦</div>
+                                        <h3>ครอบครัว</h3>
+                                        <p>ถ่ายภาพครอบครัว</p>
+                                        <span class="type-price">3,000 บาท</span>
+                                    </div>
+                                </label>
+
+                                <label class="shoot-type-card">
+                                    <input type="radio" name="shootType" value="group" data-price="4000">
+                                    <div class="type-content">
+                                        <div class="type-icon">👥</div>
+                                        <h3>กลุ่ม</h3>
+                                        <p>ถ่ายภาพกลุ่ม</p>
+                                        <span class="type-price">4,000 บาท</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>ข้อมูลผู้จอง</h2>
+                            <p class="section-desc">กรอกชื่อและเลือกเวลาที่ต้องการถ่ายภาพ</p>
+                            <div class="form-group">
+                                <input type="text" id="customerName" name="customerName" placeholder="ชื่อผู้จอง" required>
+                            </div>
+                            <div class="form-group">
+                                <select id="bookingTime" name="bookingTime" required>
+                                    <option value="">เลือกเวลา</option>
+                                    <option value="09:00 น.">09:00 น.</option>
+                                    <option value="10:00 น.">10:00 น.</option>
+                                    <option value="11:00 น.">11:00 น.</option>
+                                    <option value="12:00 น.">12:00 น.</option>
+                                    <option value="13:00 น.">13:00 น.</option>
+                                    <option value="14:00 น.">14:00 น.</option>
+                                    <option value="15:00 น.">15:00 น.</option>
+                                    <option value="16:00 น.">16:00 น.</option>
+                                    <option value="17:00 น.">17:00 น.</option>
+                                    <option value="18:00 น.">18:00 น.</option>
+                                    <option value="19:00 น.">19:00 น.</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>วันที่ถ่ายภาพ</h2>
+                            <div class="form-group">
+                                <input type="text" id="shootDateDisplay" placeholder="วว/ดด/ปปปป" maxlength="10" inputmode="numeric" autocomplete="off">
+                                <input type="hidden" id="shootDate" name="shootDate">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>เลือกห้องสตูดิโอ</h2>
+                            <p class="section-desc">เลือกห้องและดูสถานะว่ามีการจองแล้วหรือยัง</p>
+                            <div class="studio-room-grid" id="room-grid"></div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>เลือกธีมการถ่าย</h2>
+                            <div class="theme-grid" id="theme-grid">
+                                <!-- โหลดจาก API -->
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>จำนวนคน</h2>
+                            <div class="person-selector">
+                                <button type="button" class="person-btn" data-action="decrease">-</button>
+                                <span class="person-count" id="personCount">1</span>
+                                <button type="button" class="person-btn" data-action="increase">+</button>
+                                <span class="person-label">ท่าน</span>
+                            </div>
+                            <p class="person-note">ราคาพื้นฐานสำหรับ 1 ท่าน • เพิ่ม 500 บาท/ท่าน</p>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>ระยะเวลา</h2>
+                            <div class="duration-selector">
+                                <label class="duration-option">
+                                    <input type="radio" name="duration" value="2" data-price="0">
+                                    <span>2 ชั่วโมง</span>
+                                    <span class="duration-price">ฟรี</span>
+                                </label>
+                                <label class="duration-option">
+                                    <input type="radio" name="duration" value="3" data-price="500" checked>
+                                    <span>3 ชั่วโมง</span>
+                                    <span class="duration-price">+500 บาท</span>
+                                </label>
+                                <label class="duration-option">
+                                    <input type="radio" name="duration" value="4" data-price="1000">
+                                    <span>4 ชั่วโมง</span>
+                                    <span class="duration-price">+1,000 บาท</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>บริการเพิ่มเติม</h2>
+                            <div class="services-grid">
+                                <label class="service-item">
+                                    <input type="checkbox" name="service" value="outfit" data-price="800">
+                                    <div class="service-content">
+                                        <span class="service-title">จัดเสื้อผ้าพิเศษ</span>
+                                        <span class="service-price">+800 บาท</span>
+                                    </div>
+                                </label>
+
+                                <label class="service-item">
+                                    <input type="checkbox" name="service" value="editing" data-price="400">
+                                    <div class="service-content">
+                                        <span class="service-title">ปรับแต่งภาพ</span>
+                                        <span class="service-price">+400 บาท</span>
+                                    </div>
+                                </label>
+
+                                <label class="service-item">
+                                    <input type="checkbox" name="service" value="printing" data-price="500">
+                                    <div class="service-content">
+                                        <span class="service-title">พิมพ์ภาพ 10 รูป</span>
+                                        <span class="service-price">+500 บาท</span>
+                                    </div>
+                                </label>
+
+                                <label class="service-item">
+                                    <input type="checkbox" name="service" value="album" data-price="1500">
+                                    <div class="service-content">
+                                        <span class="service-title">อัลบั้มภาพ</span>
+                                        <span class="service-price">+1,500 บาท</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>หมายเหตุเพิ่มเติม</h2>
+                            <div class="form-group">
+                                <textarea id="notes" name="notes" rows="4" placeholder="บอกเราถึงความต้องการพิเศษ..."></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="studio-right">
+                    <div class="price-summary">
+                        <h3>สรุปแพ็กเกจ</h3>
+
+                        <div class="summary-section">
+                            <h4>ประเภทการถ่าย:</h4>
+                            <span id="summaryShootType">-</span>
+                        </div>
+
+                        <div class="summary-section">
+                            <h4>จำนวนคน:</h4>
+                            <span id="summaryPersons">1 ท่าน</span>
+                        </div>
+
+                        <div class="summary-section">
+                            <h4>ธีม:</h4>
+                            <span id="summaryTheme">-</span>
+                        </div>
+
+                        <div class="summary-section">
+                            <h4>ระยะเวลา:</h4>
+                            <span id="summaryDuration">3 ชั่วโมง</span>
+                        </div>
+
+                        <div class="summary-section">
+                            <h4>ห้อง:</h4>
+                            <span id="summaryRoom">-</span>
+                        </div>
+
+                        <div class="summary-section">
+                            <h4>เวลานัด:</h4>
+                            <span id="summaryBookingTime">-</span>
+                        </div>
+
+                        <div class="summary-services" id="summaryServices">
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-total">
+                            <span>รวมทั้งสิ้น:</span>
+                            <span id="totalPrice">0 บาท</span>
+                        </div>
+
+                        <button type="submit" form="studioForm" class="studio-btn">ไปหน้าชำระเงิน</button>
+                        <a href="package.html" class="back-btn">เลือกแพ็กเกจสำเร็จ</a>
+                    </div>
+
+                    <div class="studio-info">
+                        <h4>ข้อมูลสำคัญ</h4>
+                        <ul>
+                            <li>ช่างภาพและทีมงานมืออาชีพ</li>
+                            <li>สตูดิโอพร้อมอุปกรณ์ครบครัน</li>
+                            <li>ยืนยันการจองภายใน 24 ชั่วโมง</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../SRC/main.js"></script>
+    <script src="../js/studio.js"></script>
+    <script>
+        // แสดงแถบ Admin ถ้า role เป็น admin
+        (function () {
+            var u = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (u && u.role === 'admin') {
+                document.getElementById('admin-bar').style.display = 'block';
+                document.body.style.paddingTop = '38px';
+            }
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แพ็กเกจ</title>
+    <link rel="stylesheet" href="../css/user-base.css">
+    <link rel="stylesheet" href="../css/package.css">
+</head>
+
+<body>
+    <!-- แถบ Admin (แสดงเฉพาะเมื่อเข้าสู่ระบบในฐานะ Admin) -->
+    <div id="admin-bar" style="display:none;position:fixed;top:0;left:0;right:0;background:#4a0080;color:#fff;text-align:center;padding:8px 16px;z-index:9999;font-size:13px;letter-spacing:.3px;">
+        🔧 กำลังดูในโหมดผู้ดูแลระบบ &nbsp;|&nbsp;
+        <a href="../admin-users.html" style="color:#ffd700;font-weight:bold;text-decoration:none;">← กลับหน้า Admin</a>
+    </div>
+
+    <nav class="Navbar">
+        <div class="brand-wrap">
+            <a href="home.html" class="logo">
+                <img src="../pic/Logo.png" alt="logo" class="logo-img">
+                <span class="logo-text">แพ็คเกจ</span>
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="home.html">หน้าแรก</a></li>
+            <li><a href="package.html" class="active">แพ็กเกจ</a></li>
+            <li><a href="studio.html">สตูดิโอ</a></li>
+            <li><a href="../index.html" id="logoutLink">ออกจากระบบ</a></li>
+        </ul>
+    </nav>
+
+    <main class="page-shell">
+        <section class="packages-section">
+            <div class="section-header">
+                <h1>แพ็กเกจของเรา</h1>
+                <p>เลือกแพ็กเกจที่เหมาะสมกับคุณ</p>
+            </div>
+
+            <div class="packages-grid" id="packages-grid">
+                <!-- โหลดจาก API -->
+            </div>
+        </section>
+    </main>
+
+    <script src="../SRC/main.js"></script>
+    <script src="../js/package.js"></script>
+    <script>
+        // แสดงแถบ Admin ถ้า role เป็น admin
+        (function () {
+            var u = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (u && u.role === 'admin') {
+                document.getElementById('admin-bar').style.display = 'block';
+                document.body.style.paddingTop = '38px';
+            }
+        })();
+    </script>
+</body>
+
+</html>
