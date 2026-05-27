@@ -46,15 +46,15 @@ body {
     background: transparent;
     border: none;
     outline: none;
-    border: 2px solid rgba(255, 255, 255, .2);
+    border: 2px solid #000000;
     border-radius: 40px;
     font-size: 16px;
-    color: #fff;
+    color: #000000;
     padding: 20px 45px 20px 20px;
 }
 
 .input-box input::placeholder {
-    color: #fff;
+    color: rgba(0, 0, 0, 0.6);
 }
 
 .input-box i {
@@ -63,6 +63,7 @@ body {
     top: 50%;
     transform: translateY(-50%);
     font-size: 20px;
+    color: #000000;
 }
 
 .wrapper .btn {
@@ -86,7 +87,7 @@ body {
 }
 
 .register-link p a {
-    color: #fff;
+    color: #000000;
     text-decoration: none;
     font-weight: 600;
 }
