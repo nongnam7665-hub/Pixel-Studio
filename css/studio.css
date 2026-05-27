@@ -230,6 +230,7 @@
 }
 
 .theme-card input[type="radio"],
+.theme-card input[type="checkbox"],
 .backdrop-card input[type="radio"],
 .room-card input[type="radio"] {
   position: absolute;
@@ -239,7 +240,12 @@
 }
 
 .theme-card input[type="checkbox"]:checked + .theme-content,
-.theme-card input[type="radio"]:checked + .theme-content,
+.theme-card input[type="radio"]:checked + .theme-content {
+  border-color: #6a18d4;
+  background: linear-gradient(135deg, #e6deff 0%, #f0e6ff 100%);
+  box-shadow: 0 0 0 3px rgba(106, 24, 212, 0.18);
+}
+
 .room-card input[type="radio"]:checked ~ .room-content {
   border-color: #6a18d4;
   box-shadow: 0 0 0 2px rgba(106, 24, 212, 0.12);
