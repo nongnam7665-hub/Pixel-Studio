@@ -68,15 +68,16 @@ async function loadApproval() {
       const statusLabel = { pending_review: 'รอตรวจสอบ', verified: 'ยืนยันแล้ว', rejected: 'ปฏิเสธ' };
       const statusClass = { pending_review: 'pay-pending', verified: 'pay-verified', rejected: 'pay-rejected' };
       const pill = `<span class="payment-pill ${statusClass[latestPay.status] || 'pay-pending'}">${statusLabel[latestPay.status] || latestPay.status}</span>`;
+      const slipUrl = latestPay.id ? `${getApiBase()}/api/payments/slip-image?id=${latestPay.id}` : '';
       const slipBtn = latestPay.slipPath
-        ? `<button class="btn-slip" style="margin-top:4px;" onclick="openSlip('${esc(latestPay.slipPath)}','${esc(b.bookingCode)}','${esc(latestPay.payerName)}','${esc(latestPay.paymentDate||'')}',${latestPay.paidAmount})">ดูสลิป</button>`
+        ? `<button class="btn-slip" style="margin-top:4px;" onclick="openSlip('${latestPay.id}','${esc(b.bookingCode)}','${esc(latestPay.payerName)}','${esc(latestPay.paymentDate||'')}',${latestPay.paidAmount})">ดูสลิป</button>`
         : `<span style="font-size:0.75rem;color:#bbb;display:block;margin-top:2px;">ไม่มีสลิป</span>`;
       payCell = `<td style="vertical-align:top;">
         ${pill}<br>
         <small style="color:#9b6bc5;">${Number(latestPay.paidAmount).toLocaleString('th-TH')} บาท</small><br>
         ${slipBtn}
-        ${latestPay.slipPath ? `<img class="slip-thumb" style="margin-top:6px;" src="${getApiBase()}/${latestPay.slipPath}" alt="สลิป"
-          onclick="openSlip('${esc(latestPay.slipPath)}','${esc(b.bookingCode)}','${esc(latestPay.payerName)}','${esc(latestPay.paymentDate||'')}',${latestPay.paidAmount})">` : ''}
+        ${slipUrl ? `<img class="slip-thumb" style="margin-top:6px;" src="${slipUrl}" alt="สลิป"
+          onclick="openSlip('${latestPay.id}','${esc(b.bookingCode)}','${esc(latestPay.payerName)}','${esc(latestPay.paymentDate||'')}',${latestPay.paidAmount})">` : ''}
       </td>`;
     }
 
@@ -99,9 +100,9 @@ async function loadApproval() {
   }).join('');
 }
 
-function openSlip(slipPath, bookingCode, payerName, paymentDate, paidAmount) {
-  const url = `${getApiBase()}/${slipPath}`;
-  const isPdf = slipPath.toLowerCase().endsWith('.pdf');
+function openSlip(paymentId, bookingCode, payerName, paymentDate, paidAmount) {
+  const url = `${getApiBase()}/api/payments/slip-image?id=${paymentId}`;
+  const isPdf = false; // ตรวจสอบจาก response header แทน
   const img = document.getElementById('slip-img');
   const noImg = document.getElementById('slip-no-img');
   document.getElementById('slip-modal-title').textContent = `สลิปการชำระเงิน — ${bookingCode}`;

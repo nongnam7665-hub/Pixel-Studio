@@ -127,6 +127,8 @@ async function initDB() {
 
   // เพิ่ม column adminMessage ถ้ายังไม่มี (safe migration)
   await pool.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS "adminMessage" TEXT`);
+  // เพิ่ม column slipData เก็บรูปสลิปใน DB (ไม่หายตอน redeploy)
+  await pool.query(`ALTER TABLE payments ADD COLUMN IF NOT EXISTS "slipData" TEXT`);
 
   // ข้อมูลเริ่มต้น
   await pool.query(`
@@ -254,6 +256,19 @@ async function handleAdminGet(response, pathname) {
 
 async function handleApi(request, response, pathname, searchParams) {
   if (request.method === 'GET') {
+    if (pathname === '/api/payments/slip-image') {
+      const payId = searchParams.get('id');
+      if (!payId) { sendJson(response, 400, { error: 'id required' }); return true; }
+      const { rows } = await pool.query('SELECT "slipData" FROM payments WHERE id = $1', [Number(payId)]);
+      if (!rows.length || !rows[0].slipData) { sendJson(response, 404, { error: 'Not found' }); return true; }
+      const dataUrl = rows[0].slipData;
+      const mimeMatch = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
+      if (!mimeMatch) { sendJson(response, 400, { error: 'Invalid data' }); return true; }
+      const buf = Buffer.from(mimeMatch[2], 'base64');
+      response.writeHead(200, { 'Content-Type': mimeMatch[1], 'Content-Length': buf.length });
+      response.end(buf);
+      return true;
+    }
     if (pathname === '/api/user/bookings') {
       const email = searchParams.get('email') || '';
       if (!email) { sendJson(response, 400, { error: 'email required' }); return true; }
@@ -598,13 +613,9 @@ async function handleApi(request, response, pathname, searchParams) {
     if (!matches) { sendJson(response, 400, { error: 'Invalid image data' }); return true; }
     const mimeToExt = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif', 'application/pdf': 'pdf' };
     const ext = mimeToExt[matches[1]] || 'jpg';
-    const buffer = Buffer.from(matches[2], 'base64');
-    const slipsDir = path.join(ROOT_DIR, 'pic', 'slips');
-    if (!fs.existsSync(slipsDir)) fs.mkdirSync(slipsDir, { recursive: true });
-    const filename = `slip-${id}.${ext}`;
-    fs.writeFileSync(path.join(slipsDir, filename), buffer);
-    const slipPath = `pic/slips/${filename}`;
-    await pool.query('UPDATE payments SET "slipPath" = $1 WHERE id = $2', [slipPath, Number(id)]);
+    const slipPath = `pic/slips/slip-${id}.${ext}`;
+    // เก็บ base64 ใน DB (ไม่หายตอน redeploy) + เก็บ path ไว้อ้างอิง
+    await pool.query('UPDATE payments SET "slipPath" = $1, "slipData" = $2 WHERE id = $3', [slipPath, imageData, Number(id)]);
     sendJson(response, 200, { ok: true, slipPath });
     return true;
   }
