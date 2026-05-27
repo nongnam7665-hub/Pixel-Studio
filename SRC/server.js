@@ -27,105 +27,103 @@ const CONTENT_TYPES = {
   '.pdf':  'application/pdf',
 };
 
-// สร้างตารางและข้อมูลเริ่มต้น
+// สร้างตารางและข้อมูลเริ่มต้น (แยกทีละตาราง เพราะ pg ไม่รองรับ multi-statement)
 async function initDB() {
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
-      "firstName" TEXT NOT NULL,
-      "lastName" TEXT NOT NULL,
-      email TEXT NOT NULL UNIQUE,
-      phone TEXT NOT NULL,
-      password TEXT NOT NULL,
-      "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
-    );
-    CREATE TABLE IF NOT EXISTS admins (
-      id SERIAL PRIMARY KEY,
-      username TEXT NOT NULL,
-      email TEXT NOT NULL UNIQUE,
-      password TEXT NOT NULL,
-      "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
-    );
-    CREATE TABLE IF NOT EXISTS rooms (
-      id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      description TEXT,
-      capacity INTEGER DEFAULT 4,
-      status TEXT NOT NULL DEFAULT 'available',
-      image TEXT DEFAULT NULL
-    );
-    CREATE TABLE IF NOT EXISTS bookings (
-      id SERIAL PRIMARY KEY,
-      "bookingCode" TEXT NOT NULL UNIQUE,
-      "customerName" TEXT NOT NULL,
-      "customerEmail" TEXT,
-      "packageName" TEXT NOT NULL,
-      "shootType" TEXT,
-      "shootTypeName" TEXT,
-      room TEXT NOT NULL,
-      "shootDate" TEXT NOT NULL,
-      "bookingTime" TEXT NOT NULL,
-      duration TEXT,
-      persons INTEGER DEFAULT 1,
-      theme TEXT,
-      "themeName" TEXT,
-      services TEXT,
-      notes TEXT,
-      "totalPrice" NUMERIC NOT NULL DEFAULT 0,
-      status TEXT NOT NULL DEFAULT 'pending',
-      "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
-    );
-    CREATE TABLE IF NOT EXISTS payments (
-      id SERIAL PRIMARY KEY,
-      "bookingCode" TEXT NOT NULL,
-      "paymentMethod" TEXT NOT NULL,
-      "payerName" TEXT NOT NULL,
-      "payerPhone" TEXT,
-      "paymentDate" TEXT,
-      "paymentTime" TEXT,
-      "paidAmount" NUMERIC NOT NULL DEFAULT 0,
-      note TEXT,
-      "slipName" TEXT,
-      "slipPath" TEXT,
-      status TEXT NOT NULL DEFAULT 'pending_review',
-      "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
-    );
-    CREATE TABLE IF NOT EXISTS returns (
-      id SERIAL PRIMARY KEY,
-      "bookingCode" TEXT NOT NULL,
-      "returnDate" TEXT,
-      "roomCondition" TEXT,
-      "equipmentNotes" TEXT,
-      status TEXT NOT NULL DEFAULT 'pending',
-      "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
-    );
-    CREATE TABLE IF NOT EXISTS packages (
-      id SERIAL PRIMARY KEY,
-      slug TEXT NOT NULL UNIQUE,
-      name TEXT NOT NULL,
-      description TEXT,
-      duration TEXT DEFAULT '3 ชั่วโมง',
-      features TEXT DEFAULT '[]',
-      old_price NUMERIC DEFAULT 0,
-      new_price NUMERIC DEFAULT 0,
-      badge TEXT,
-      image TEXT,
-      is_promo INTEGER DEFAULT 1,
-      sort_order INTEGER DEFAULT 0
-    );
-    CREATE TABLE IF NOT EXISTS themes (
-      id SERIAL PRIMARY KEY,
-      slug TEXT NOT NULL UNIQUE,
-      name TEXT NOT NULL,
-      description TEXT DEFAULT '',
-      price INTEGER DEFAULT 0,
-      color1 TEXT DEFAULT '#ffffff',
-      color2 TEXT DEFAULT '#f0f0f0',
-      sort_order INTEGER DEFAULT 0,
-      is_active INTEGER DEFAULT 1,
-      image TEXT DEFAULT NULL
-    );
-  `);
+  await pool.query(`CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    phone TEXT NOT NULL,
+    password TEXT NOT NULL,
+    "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`);
+  await pool.query(`CREATE TABLE IF NOT EXISTS admins (
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`);
+  await pool.query(`CREATE TABLE IF NOT EXISTS rooms (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    capacity INTEGER DEFAULT 4,
+    status TEXT NOT NULL DEFAULT 'available',
+    image TEXT DEFAULT NULL
+  )`);
+  await pool.query(`CREATE TABLE IF NOT EXISTS bookings (
+    id SERIAL PRIMARY KEY,
+    "bookingCode" TEXT NOT NULL UNIQUE,
+    "customerName" TEXT NOT NULL,
+    "customerEmail" TEXT,
+    "packageName" TEXT NOT NULL,
+    "shootType" TEXT,
+    "shootTypeName" TEXT,
+    room TEXT NOT NULL,
+    "shootDate" TEXT NOT NULL,
+    "bookingTime" TEXT NOT NULL,
+    duration TEXT,
+    persons INTEGER DEFAULT 1,
+    theme TEXT,
+    "themeName" TEXT,
+    services TEXT,
+    notes TEXT,
+    "totalPrice" NUMERIC NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'pending',
+    "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`);
+  await pool.query(`CREATE TABLE IF NOT EXISTS payments (
+    id SERIAL PRIMARY KEY,
+    "bookingCode" TEXT NOT NULL,
+    "paymentMethod" TEXT NOT NULL,
+    "payerName" TEXT NOT NULL,
+    "payerPhone" TEXT,
+    "paymentDate" TEXT,
+    "paymentTime" TEXT,
+    "paidAmount" NUMERIC NOT NULL DEFAULT 0,
+    note TEXT,
+    "slipName" TEXT,
+    "slipPath" TEXT,
+    status TEXT NOT NULL DEFAULT 'pending_review',
+    "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`);
+  await pool.query(`CREATE TABLE IF NOT EXISTS returns (
+    id SERIAL PRIMARY KEY,
+    "bookingCode" TEXT NOT NULL,
+    "returnDate" TEXT,
+    "roomCondition" TEXT,
+    "equipmentNotes" TEXT,
+    status TEXT NOT NULL DEFAULT 'pending',
+    "createdAt" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`);
+  await pool.query(`CREATE TABLE IF NOT EXISTS packages (
+    id SERIAL PRIMARY KEY,
+    slug TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    description TEXT,
+    duration TEXT DEFAULT '3 ชั่วโมง',
+    features TEXT DEFAULT '[]',
+    old_price NUMERIC DEFAULT 0,
+    new_price NUMERIC DEFAULT 0,
+    badge TEXT,
+    image TEXT,
+    is_promo INTEGER DEFAULT 1,
+    sort_order INTEGER DEFAULT 0
+  )`);
+  await pool.query(`CREATE TABLE IF NOT EXISTS themes (
+    id SERIAL PRIMARY KEY,
+    slug TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    description TEXT DEFAULT '',
+    price INTEGER DEFAULT 0,
+    color1 TEXT DEFAULT '#ffffff',
+    color2 TEXT DEFAULT '#f0f0f0',
+    sort_order INTEGER DEFAULT 0,
+    is_active INTEGER DEFAULT 1,
+    image TEXT DEFAULT NULL
+  )`);
 
   // ข้อมูลเริ่มต้น
   await pool.query(`
