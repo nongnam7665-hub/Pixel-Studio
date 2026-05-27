@@ -20,7 +20,7 @@ if (btnLogin) {
         }
 
         try {
-            // ลองเป็น admin ก่อน
+    
             const adminRes = await fetch(getApiBase() + '/api/admin/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -34,8 +34,7 @@ if (btnLogin) {
                 window.location.href = 'admin.html';
                 return;
             }
-
-            // ถ้าไม่ใช่ admin ลองเป็น user
+            
             const userRes = await fetch(getApiBase() + '/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
