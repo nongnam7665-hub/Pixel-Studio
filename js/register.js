@@ -45,7 +45,14 @@ if (btnRegister) {
                 alert('สมัครสมาชิกสำเร็จเรียบร้อยแล้ว!');
                 window.location.href = 'index.html';
             } else {
-                alert(result.error || result.message || 'สมัครสมาชิกไม่สำเร็จ');
+                const errMsg = result.error || result.message || '';
+                if (errMsg.toLowerCase().includes('email already exists')) {
+                    alert('อีเมลนี้ถูกใช้งานแล้ว กรุณาใช้อีเมลอื่น');
+                } else if (errMsg.toLowerCase().includes('username already exists')) {
+                    alert('ชื่อ-นามสกุลนี้มีในระบบแล้ว กรุณาตรวจสอบ');
+                } else {
+                    alert('สมัครสมาชิกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง');
+                }
             }
 
         } catch (error) {
