@@ -170,13 +170,33 @@ async function saveBooking() {
   loadApproval();
 }
 
-async function updateBookingStatus(bookingCode, status) {
-  await apiFetch('/api/admin/bookings/status', 'POST', { bookingCode, status });
+function updateBookingStatus(bookingCode, status) {
+  document.getElementById('msg-bookingCode').value = bookingCode;
+  document.getElementById('msg-status').value = status;
+  document.getElementById('msg-modal-title').textContent =
+    status === 'approved' ? '✅ อนุมัติการจอง' : '❌ ปฏิเสธการจอง';
+  document.getElementById('admin-message').value = '';
+  document.getElementById('msg-modal').classList.add('open');
+}
+
+function closeMsgModal() {
+  document.getElementById('msg-modal').classList.remove('open');
+}
+
+async function confirmStatus() {
+  const bookingCode = document.getElementById('msg-bookingCode').value;
+  const status = document.getElementById('msg-status').value;
+  const adminMessage = document.getElementById('admin-message').value.trim();
+  await apiFetch('/api/admin/bookings/status', 'POST', { bookingCode, status, adminMessage });
+  closeMsgModal();
   loadApproval();
 }
 
 document.getElementById('modal').addEventListener('click', (e) => {
   if (e.target === document.getElementById('modal')) closeModal();
+});
+document.getElementById('msg-modal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('msg-modal')) closeMsgModal();
 });
 document.getElementById('slip-modal').addEventListener('click', (e) => {
   if (e.target === document.getElementById('slip-modal')) closeSlipModal();

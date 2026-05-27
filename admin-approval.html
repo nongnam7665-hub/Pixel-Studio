@@ -120,6 +120,23 @@
     </div>
   </div>
 
+  <!-- Modal ข้อความอนุมัติ/ปฏิเสธ -->
+  <div id="msg-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 class="modal-title" id="msg-modal-title">ข้อความถึงผู้ใช้</h3>
+      <input type="hidden" id="msg-bookingCode">
+      <input type="hidden" id="msg-status">
+      <div class="form-group">
+        <label>ข้อความถึงผู้ใช้ <span style="color:#aaa;font-weight:400;">(ไม่บังคับ)</span></label>
+        <textarea id="admin-message" rows="4" placeholder="เช่น กรุณามาตรงเวลา, เตรียมเอกสารให้พร้อม..." style="width:100%;padding:10px;border-radius:10px;border:1.5px solid #d4b8f0;font-family:inherit;font-size:0.95rem;resize:vertical;"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeMsgModal()">ยกเลิก</button>
+        <button class="btn-save" onclick="confirmStatus()">ยืนยัน</button>
+      </div>
+    </div>
+  </div>
+
   <script src="js/admin-approval.js"></script>
 </body>
 </html>

@@ -125,6 +125,9 @@ async function initDB() {
     image TEXT DEFAULT NULL
   )`);
 
+  // เพิ่ม column adminMessage ถ้ายังไม่มี (safe migration)
+  await pool.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS "adminMessage" TEXT`);
+
   // ข้อมูลเริ่มต้น
   await pool.query(`
     INSERT INTO admins (username, email, password)
@@ -251,6 +254,17 @@ async function handleAdminGet(response, pathname) {
 
 async function handleApi(request, response, pathname, searchParams) {
   if (request.method === 'GET') {
+    if (pathname === '/api/user/bookings') {
+      const email = searchParams.get('email') || '';
+      if (!email) { sendJson(response, 400, { error: 'email required' }); return true; }
+      const { rows } = await pool.query(
+        `SELECT "bookingCode", "packageName", "customerName", room, "shootDate", "bookingTime", "totalPrice", status, "adminMessage", "createdAt"
+         FROM bookings WHERE "customerEmail" = $1 ORDER BY "createdAt" DESC`,
+        [email]
+      );
+      sendJson(response, 200, { bookings: rows });
+      return true;
+    }
     if (pathname === '/api/rooms/availability') {
       const date = searchParams.get('date') || '';
       const { rows } = await pool.query(
@@ -451,12 +465,15 @@ async function handleApi(request, response, pathname, searchParams) {
   }
 
   if (pathname === '/api/admin/bookings/status') {
-    const { bookingCode, status } = body;
+    const { bookingCode, status, adminMessage } = body;
     const allowed = ['pending', 'approved', 'active', 'completed', 'cancelled'];
     if (!bookingCode || !allowed.includes(status)) {
       sendJson(response, 400, { error: 'Invalid bookingCode or status' }); return true;
     }
-    await pool.query('UPDATE bookings SET status = $1 WHERE "bookingCode" = $2', [status, bookingCode]);
+    await pool.query(
+      'UPDATE bookings SET status = $1, "adminMessage" = $2 WHERE "bookingCode" = $3',
+      [status, adminMessage || null, bookingCode]
+    );
     sendJson(response, 200, { ok: true });
     return true;
   }
