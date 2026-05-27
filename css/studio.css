@@ -8,8 +8,14 @@
 
 .studio-container {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 380px;
   gap: 30px;
+  align-items: start;
+}
+
+.studio-right {
+  position: sticky;
+  top: 20px;
 }
 
 .studio-left h1 {
