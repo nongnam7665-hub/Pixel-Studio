@@ -304,8 +304,17 @@ function handleAdminGet(response, pathname) {
   return false;
 }
 
-async function handleApi(request, response, pathname) {
+async function handleApi(request, response, pathname, searchParams) {
   if (request.method === 'GET') {
+    if (pathname === '/api/rooms/availability') {
+      const date = searchParams.get('date') || '';
+      const allBookings = getAllBookingsStmt.all();
+      const dateBookings = allBookings
+        .filter(b => b.shootDate === date && !['cancelled', 'rejected'].includes(b.status))
+        .map(b => ({ room: b.room, bookingTime: b.bookingTime, duration: b.duration }));
+      sendJson(response, 200, { bookings: dateBookings });
+      return true;
+    }
     const handled = handleAdminGet(response, pathname);
     if (!handled) sendJson(response, 404, { error: 'API route not found' });
     return true;
@@ -747,7 +756,7 @@ function createServer() {
     try {
       const url = new URL(request.url, `http://${request.headers.host || `${HOST}:${PORT}`}`);
       if (url.pathname.startsWith('/api/')) {
-        const handled = await handleApi(request, response, url.pathname);
+        const handled = await handleApi(request, response, url.pathname, url.searchParams);
         if (!handled) sendJson(response, 404, { error: 'API route not found' });
         return;
       }

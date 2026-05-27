@@ -23,9 +23,10 @@ document.getElementById('shootDateDisplay').addEventListener('input', function()
     this.value = v;
     if (digits.length === 8) {
         dateInput.value = `${digits.slice(4,8)}-${digits.slice(2,4)}-${digits.slice(0,2)}`;
-        dateInput.dispatchEvent(new Event('change'));
+        fetchBookingsForDate(dateInput.value); // ดึงข้อมูลห้องจาก server
     } else {
         dateInput.value = '';
+        fetchBookingsForDate('');
     }
 });
 
@@ -71,16 +72,38 @@ async function buildRoomGrid() {
     const savedRoom = grid.querySelector(`input[name="studioRoom"][value="${currentBooking.room}"]`);
     if (savedRoom && !savedRoom.disabled) { savedRoom.checked = true; updateRoomSummary(); }
   }
-  updateTimeAvailability();
-  updateRoomAvailability();
+  // ถ้ามีวันที่เลือกอยู่แล้ว ให้ดึงข้อมูลห้องจาก server ทันที
+  if (dateInput.value) {
+    fetchBookingsForDate(dateInput.value);
+  }
 }
 
 function getRoomInputs() {
   return document.querySelectorAll('input[name="studioRoom"]');
 }
 
+// ---- ระบบเช็คห้องว่าง/ไม่ว่าง (ดึงจาก server จริง) ----
+let cachedDateBookings = []; // เก็บ booking ของวันที่เลือกไว้ใน memory
+
+async function fetchBookingsForDate(date) {
+    if (!date) {
+        cachedDateBookings = [];
+        updateTimeAvailability();
+        updateRoomAvailability();
+        return;
+    }
+    try {
+        const data = await fetch(`${getApiBase()}/api/rooms/availability?date=${date}`).then(r => r.json());
+        cachedDateBookings = data.bookings || [];
+    } catch {
+        cachedDateBookings = [];
+    }
+    updateTimeAvailability();
+    updateRoomAvailability();
+}
+
 function getRoomBookings() {
-    return JSON.parse(localStorage.getItem('studioBookings') || '[]');
+    return cachedDateBookings; // อ่านจาก cache ที่ดึงมาจาก server
 }
 
 function parseMinutes(timeStr) {
@@ -96,23 +119,22 @@ function slotOverlaps(booking, checkTime) {
     return checkMin >= startMin && checkMin < startMin + durHours * 60;
 }
 
-function isRoomBooked(room, date, checkTime) {
-    if (!room || !date || !checkTime) return false;
-    return getRoomBookings().some(b => b.room === room && b.shootDate === date && slotOverlaps(b, checkTime));
+function isRoomBooked(room, checkTime) {
+    if (!room || !checkTime) return false;
+    return getRoomBookings().some(b => b.room === room && slotOverlaps(b, checkTime));
 }
 
-function isTimeBooked(date, checkTime) {
-    if (!date || !checkTime) return false;
+function isTimeBooked(checkTime) {
+    if (!checkTime) return false;
     const bookings = getRoomBookings();
     const allRooms = ['A', 'B', 'C', 'D'];
-    return allRooms.every(room => bookings.some(b => b.room === room && b.shootDate === date && slotOverlaps(b, checkTime)));
+    return allRooms.every(room => bookings.some(b => b.room === room && slotOverlaps(b, checkTime)));
 }
 
 function updateTimeAvailability() {
-    const date = dateInput.value;
     Array.from(timeSelect.options).forEach(option => {
         if (!option.value) return;
-        if (isTimeBooked(date, option.value)) {
+        if (isTimeBooked(option.value)) {
             option.disabled = true;
             if (!option.dataset.originalText) option.dataset.originalText = option.text;
             option.text = option.dataset.originalText + ' (เต็ม)';
@@ -121,20 +143,18 @@ function updateTimeAvailability() {
             if (option.dataset.originalText) option.text = option.dataset.originalText;
         }
     });
-
-    if (timeSelect.value && isTimeBooked(date, timeSelect.value)) {
+    if (timeSelect.value && isTimeBooked(timeSelect.value)) {
         timeSelect.value = '';
         document.getElementById('summaryBookingTime').textContent = '-';
     }
 }
 
 function updateRoomAvailability() {
-    const date = dateInput.value;
     const time = timeSelect.value;
     getRoomInputs().forEach(input => {
         const card = input.closest('.room-card');
         const status = card.querySelector('.room-status');
-        if (isRoomBooked(input.value, date, time)) {
+        if (isRoomBooked(input.value, time)) {
             input.disabled = true;
             card.classList.add('full');
             status.textContent = 'เต็ม';
@@ -144,7 +164,6 @@ function updateRoomAvailability() {
             status.textContent = 'ว่าง';
         }
     });
-
     const selectedRoom = document.querySelector('input[name="studioRoom"]:checked');
     if (selectedRoom && selectedRoom.disabled) {
         selectedRoom.checked = false;
@@ -258,8 +277,7 @@ document.getElementById('bookingTime').addEventListener('change', function() {
 });
 
 dateInput.addEventListener('change', function() {
-    updateTimeAvailability();
-    updateRoomAvailability();
+    fetchBookingsForDate(this.value); // ดึงจาก server ทุกครั้งที่เปลี่ยนวันที่
 });
 
 function updatePrice() {
@@ -335,8 +353,10 @@ document.getElementById('studioForm').addEventListener('submit', async function(
     const selectedRoom = document.querySelector('input[name="studioRoom"]:checked');
     if (!selectedRoom) { alert('กรุณาเลือกห้องสตูดิโอ'); return; }
 
-    if (isRoomBooked(selectedRoom.value, shootDate, bookingTime)) {
-        alert('ห้องที่เลือกถูกจองแล้ว กรุณาเลือกห้องอื่นหรือตรวจสอบวันที่/เวลาใหม่');
+    // ดึงข้อมูลล่าสุดจาก server ก่อน submit เพื่อป้องกันจองซ้ำ
+    await fetchBookingsForDate(shootDate);
+    if (isRoomBooked(selectedRoom.value, bookingTime)) {
+        alert('ขออภัย ห้องที่เลือกถูกจองแล้ว กรุณาเลือกห้องอื่นหรือเวลาอื่น');
         updateRoomAvailability();
         return;
     }
