@@ -238,6 +238,7 @@
   height: 0;
 }
 
+.theme-card input[type="checkbox"]:checked + .theme-content,
 .theme-card input[type="radio"]:checked + .theme-content,
 .room-card input[type="radio"]:checked ~ .room-content {
   border-color: #6a18d4;

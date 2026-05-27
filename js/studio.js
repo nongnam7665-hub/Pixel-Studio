@@ -228,7 +228,7 @@ async function buildThemeGrid() {
             : `background:linear-gradient(135deg,${t.color1} 0%,${t.color2} 100%);`;
         return `
         <label class="theme-card">
-            <input type="radio" name="theme" value="${t.slug}" data-price="${Number(t.price)}"${i === 0 ? ' checked' : ''}>
+            <input type="checkbox" name="theme" value="${t.slug}" data-price="${Number(t.price)}">
             <div class="theme-content">
                 <div class="theme-preview" style="${previewStyle}"></div>
                 <div class="theme-text">
@@ -240,23 +240,29 @@ async function buildThemeGrid() {
         </label>`;
     }).join('');
 
-    document.querySelectorAll('input[name="theme"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            const label = this.closest('label').querySelector('h4');
-            document.getElementById('summaryTheme').textContent = label ? label.textContent : this.value;
-            updatePrice();
-        });
+    function updateThemeSummary() {
+        const checked = Array.from(document.querySelectorAll('input[name="theme"]:checked'));
+        const names = checked.map(t => t.closest('label').querySelector('h4').textContent);
+        document.getElementById('summaryTheme').textContent = names.length ? names.join(', ') : '-';
+        updatePrice();
+    }
+
+    document.querySelectorAll('input[name="theme"]').forEach(cb => {
+        cb.addEventListener('change', updateThemeSummary);
     });
 
-    const savedThemeSlug = currentBooking && currentBooking.theme;
-    const themeToCheck = savedThemeSlug
-        ? grid.querySelector(`input[name="theme"][value="${savedThemeSlug}"]`)
-        : grid.querySelector('input[name="theme"]');
-    if (themeToCheck) {
-        themeToCheck.checked = true;
-        document.getElementById('summaryTheme').textContent =
-            themeToCheck.closest('label').querySelector('h4').textContent;
+    // restore จาก booking เดิม (รองรับทั้ง array และ string เดิม)
+    const savedSlugs = currentBooking
+        ? (Array.isArray(currentBooking.themes) ? currentBooking.themes
+            : currentBooking.theme ? currentBooking.theme.split(',') : [])
+        : [];
+    if (savedSlugs.length) {
+        savedSlugs.forEach(slug => {
+            const el = grid.querySelector(`input[name="theme"][value="${slug.trim()}"]`);
+            if (el) el.checked = true;
+        });
     }
+    updateThemeSummary();
     updatePrice();
 }
 
@@ -292,10 +298,9 @@ function updatePrice() {
         totalPrice += (currentPersons - 1) * 500;
     }
 
-    const theme = document.querySelector('input[name="theme"]:checked');
-    if (theme) {
+    document.querySelectorAll('input[name="theme"]:checked').forEach(theme => {
         totalPrice += parseInt(theme.dataset.price);
-    }
+    });
 
     const duration = document.querySelector('input[name="duration"]:checked');
     if (duration) {
@@ -344,8 +349,8 @@ document.getElementById('studioForm').addEventListener('submit', async function(
     const shootType = document.querySelector('input[name="shootType"]:checked');
     if (!shootType) { alert('กรุณาเลือกประเภทการถ่ายภาพ'); return; }
 
-    const theme = document.querySelector('input[name="theme"]:checked');
-    if (!theme) { alert('กรุณาเลือกธีมการถ่าย'); return; }
+    const selectedThemeEls = Array.from(document.querySelectorAll('input[name="theme"]:checked'));
+    if (!selectedThemeEls.length) { alert('กรุณาเลือกธีมการถ่ายอย่างน้อย 1 ธีม'); return; }
 
     const selectedServices = Array.from(document.querySelectorAll('input[name="service"]:checked'))
         .map(service => service.value);
@@ -377,7 +382,8 @@ document.getElementById('studioForm').addEventListener('submit', async function(
         customerName: customerName,
         shootType: shootType.value,
         shootTypeName: shootTypeName,
-        theme: theme.value,
+        themes: selectedThemeEls.map(t => t.value),
+        theme: selectedThemeEls.map(t => t.value).join(','),
         themeName: document.getElementById('summaryTheme').textContent,
         persons: currentPersons,
         room: selectedRoom.value,
