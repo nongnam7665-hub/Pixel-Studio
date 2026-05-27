@@ -2,8 +2,10 @@ services:
   - type: web
     name: studio-booking
     runtime: node
-    buildCommand: ""
-    startCommand: node --experimental-sqlite SRC/server.js
+    buildCommand: npm install
+    startCommand: node SRC/server.js
     envVars:
       - key: NODE_VERSION
         value: 22.15.0
+      - key: DATABASE_URL
+        value: postgresql://postgres:iwwoueOSMBhkiPLw@db.bfocavickonxvardxfpa.supabase.co:5432/postgres
