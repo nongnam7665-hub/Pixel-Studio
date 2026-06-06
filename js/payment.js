@@ -1,4 +1,7 @@
 ﻿const booking = JSON.parse(localStorage.getItem('currentBooking') || 'null');
+const _currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+const _userName = _currentUser ? `${_currentUser.firstName || ''} ${_currentUser.lastName || ''}`.trim() : '';
+if (booking && !booking.customerName && _userName) booking.customerName = _userName;
 const summary = document.getElementById('bookingSummary');
 const fullTotal = document.getElementById('fullTotal');
 const depositAmount = document.getElementById('depositAmount');
