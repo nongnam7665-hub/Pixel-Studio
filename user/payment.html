@@ -72,14 +72,8 @@
                     <div class="form-panel">
                         <h2>หลักฐานการชำระเงิน</h2>
                         <div class="form-grid">
-                            <label class="form-field">
-                                <span>ชื่อผู้โอน</span>
-                                <input type="text" id="payerName" placeholder="ชื่อ-นามสกุล" required>
-                            </label>
-                            <label class="form-field">
-                                <span>เบอร์โทรศัพท์</span>
-                                <input type="tel" id="payerPhone" placeholder="0XX-XXX-XXXX" required>
-                            </label>
+                            <input type="hidden" id="payerName">
+                            <input type="hidden" id="payerPhone">
                             <label class="form-field">
                                 <span>วันที่ชำระเงิน</span>
                                 <input type="text" id="paymentDateDisplay" placeholder="วว/ดด/ปปปป" maxlength="10" inputmode="numeric" autocomplete="off" required>
