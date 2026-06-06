@@ -46,7 +46,8 @@ async function loadApproval() {
     apiFetch('/api/admin/payments'),
   ]);
 
-  const pending = bookings.filter(b => b.status === 'pending');
+  const paidCodes = new Set(payments.map(p => p.bookingCode));
+  const pending = bookings.filter(b => b.status === 'pending' && paidCodes.has(b.bookingCode));
   const list = document.getElementById('approval-list');
 
   if (!pending.length) {
