@@ -44,7 +44,7 @@ function emptyRow(cols, msg) {
 async function loadUsers() {
   const { users = [] } = await apiFetch('/api/admin/users');
   const tbody = document.getElementById('users-tbody');
-  if (!users.length) { tbody.innerHTML = emptyRow(7, 'ไม่มีข้อมูลสมาชิก'); return; }
+  if (!users.length) { tbody.innerHTML = emptyRow(6, 'ไม่มีข้อมูลสมาชิก'); return; }
   tbody.innerHTML = users.map((u, i) => `
     <tr>
       <td>${i + 1}</td>
@@ -53,10 +53,6 @@ async function loadUsers() {
       <td>${u.email}</td>
       <td>${u.phone}</td>
       <td>${fmt(u.createdAt)}</td>
-      <td>
-        <button class="action-btn edit" onclick="openEdit(${u.id},'${esc(u.firstName)}','${esc(u.lastName)}','${esc(u.email)}','${esc(u.phone)}')">แก้ไข</button>
-        <button class="action-btn delete" onclick="deleteUser(${u.id})">ลบ</button>
-      </td>
     </tr>`).join('');
 }
 
