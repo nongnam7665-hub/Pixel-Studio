@@ -167,7 +167,7 @@ document.getElementById('checkoutForm').addEventListener('submit', function(e) {
 
     const shootDate = document.getElementById('shootDate').value;
     const notes = document.getElementById('notes').value;
-    const customerName = currentUser ? `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() : '';
+    const customerName = currentUser ? (currentUser.username || '') : '';
     const bookingTime = document.getElementById('bookingTime').value;
 
     if (!bookingTime) {

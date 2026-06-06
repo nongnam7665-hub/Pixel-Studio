@@ -337,7 +337,7 @@ function getApiBase() {
 document.getElementById('studioForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const customerName = currentUser ? `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() : '';
+    const customerName = currentUser ? (currentUser.username || '') : '';
     const shootDate = document.getElementById('shootDate').value;
     const bookingTime = document.getElementById('bookingTime').value;
     const notes = document.getElementById('notes').value;

@@ -1,6 +1,6 @@
 ﻿const booking = JSON.parse(localStorage.getItem('currentBooking') || 'null');
 const _currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-const _userName = _currentUser ? `${_currentUser.firstName || ''} ${_currentUser.lastName || ''}`.trim() : '';
+const _userName = _currentUser ? _currentUser.username || '' : '';
 if (booking && !booking.customerName && _userName) booking.customerName = _userName;
 const summary = document.getElementById('bookingSummary');
 const fullTotal = document.getElementById('fullTotal');
@@ -62,8 +62,11 @@ if (!booking) {
     const _yyyy = _today.getFullYear();
     document.getElementById('paymentDateDisplay').value = `${_dd}/${_mm}/${_yyyy}`;
     paymentDate.value = `${_yyyy}-${_mm}-${_dd}`;
+    const _hh = String(_today.getHours()).padStart(2,'0');
+    const _min = String(_today.getMinutes()).padStart(2,'0');
+    document.getElementById('paymentTime').value = `${_hh}:${_min}`;
     const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-    payerName.value = currentUser ? `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() : (booking.customerName || '');
+    payerName.value = currentUser ? currentUser.username || '' : (booking.customerName || '');
     const payerPhoneEl = document.getElementById('payerPhone');
     if (payerPhoneEl && currentUser && currentUser.phone) payerPhoneEl.value = currentUser.phone;
     editBookingLink.href = booking.type === 'custom' ? 'studio.html' : `checkout.html?package=${packageId}`;
@@ -336,7 +339,7 @@ document.getElementById('paymentForm').addEventListener('submit', async (event) 
         // Step 1: save booking to DB (only once — skip if already has a bookingCode)
         let finalBookingCode = booking.bookingCode || '';
         if (!finalBookingCode) {
-            const customerName = (currentUser ? `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() : '') || booking.customerName || '';
+            const customerName = (currentUser ? currentUser.username || '' : '') || booking.customerName || '';
             if (!customerName || !booking.room || !booking.shootDate || !booking.bookingTime) {
                 alert('ข้อมูลการจองไม่ครบ กรุณาเริ่มจองใหม่');
                 return;
