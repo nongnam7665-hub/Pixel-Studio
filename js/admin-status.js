@@ -196,7 +196,7 @@ async function loadStatus() {
       <td>${badge(b.status)}</td>
       <td>
         <button class="action-btn approve" onclick="updateBookingStatus('${b.bookingCode}','active')">กำลังใช้งาน</button>
-        <button class="action-btn edit" onclick="updateBookingStatus('${b.bookingCode}','completed')">เสร็จสิ้น</button>
+        <button class="action-btn edit" onclick="completeAndReturn('${b.bookingCode}')">เสร็จสิ้น</button>
       </td>
       <td>
         <button class="action-btn edit" onclick="openEdit(${b.id},'${esc(b.customerName)}','${b.room}','${b.shootDate}','${esc(b.bookingTime)}',${b.persons||1},'${esc(b.themeName||'')}',${b.totalPrice})">แก้ไข</button>
@@ -256,6 +256,20 @@ async function saveBooking() {
 
 async function updateBookingStatus(bookingCode, status) {
   await apiFetch('/api/admin/bookings/status', 'POST', { bookingCode, status });
+  loadStatus();
+}
+
+async function completeAndReturn(bookingCode) {
+  if (!confirm(`ยืนยันคืนห้อง ${bookingCode} และเปลี่ยนสถานะเป็นเสร็จสิ้น?`)) return;
+  await apiFetch('/api/admin/bookings/status', 'POST', { bookingCode, status: 'completed' });
+  const today = new Date();
+  const returnDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  await apiFetch('/api/returns', 'POST', {
+    bookingCode,
+    returnDate,
+    roomCondition: 'ดี',
+    equipmentNotes: 'คืนห้องโดยผู้ดูแลระบบ',
+  });
   loadStatus();
 }
 
