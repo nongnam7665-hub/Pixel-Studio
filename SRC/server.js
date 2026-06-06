@@ -283,7 +283,7 @@ async function handleApi(request, response, pathname, searchParams) {
     if (pathname === '/api/rooms/availability') {
       const date = searchParams.get('date') || '';
       const { rows } = await pool.query(
-        `SELECT room, "bookingTime", duration FROM bookings WHERE "shootDate" = $1 AND status NOT IN ('cancelled', 'rejected')`,
+        `SELECT room, "bookingTime", duration FROM bookings WHERE "shootDate" = $1 AND status NOT IN ('cancelled', 'rejected', 'completed')`,
         [date]
       );
       sendJson(response, 200, { bookings: rows });
