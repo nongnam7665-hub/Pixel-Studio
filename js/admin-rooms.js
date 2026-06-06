@@ -72,7 +72,7 @@ async function loadRooms() {
         <p>${escHtml(r.description || '-')}</p>
         <div class="room-stats">
           <span>ความจุ ${r.capacity} คน</span>
-          <span>จองทั้งหมด ${r.totalBookings} ครั้ง</span>
+          <span>เช่าทั้งหมด ${r.totalBookings} ครั้ง</span>
           <span>กำลังใช้ ${r.activeBookings} ครั้ง</span>
         </div>
         <div class="room-card-footer">

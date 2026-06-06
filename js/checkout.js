@@ -61,7 +61,7 @@ function initPage() {
             <h2>${packageData.name}</h2>
             <p class="duration">⏱️ ${packageData.duration}</p>
             <p class="desc">${packageData.description}</p>
-            ${currentBooking ? `<p class="summary-detail">ชื่อผู้จอง: ${currentBooking.customerName}</p><p class="summary-detail">เวลา: ${currentBooking.bookingTime}</p>${currentBooking.roomName ? `<p class="summary-detail">ห้อง: ${currentBooking.roomName}</p>` : ''}` : ''}
+            ${currentBooking ? `<p class="summary-detail">ชื่อผู้เช่า: ${currentBooking.customerName}</p><p class="summary-detail">เวลา: ${currentBooking.bookingTime}</p>${currentBooking.roomName ? `<p class="summary-detail">ห้อง: ${currentBooking.roomName}</p>` : ''}` : ''}
         </div>
     `;
     const timeSelect = document.getElementById('bookingTime');

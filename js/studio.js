@@ -357,10 +357,10 @@ document.getElementById('studioForm').addEventListener('submit', async function(
     const selectedRoom = document.querySelector('input[name="studioRoom"]:checked');
     if (!selectedRoom) { alert('กรุณาเลือกห้องสตูดิโอ'); return; }
 
-    // ดึงข้อมูลล่าสุดจาก server ก่อน submit เพื่อป้องกันจองซ้ำ
+    // ดึงข้อมูลล่าสุดจาก server ก่อน submit เพื่อป้องกันเช่าซ้ำ
     await fetchBookingsForDate(shootDate);
     if (isRoomBooked(selectedRoom.value, bookingTime)) {
-        alert('ขออภัย ห้องที่เลือกถูกจองแล้ว กรุณาเลือกห้องอื่นหรือเวลาอื่น');
+        alert('ขออภัย ห้องที่เลือกถูกเช่าแล้ว กรุณาเลือกห้องอื่นหรือเวลาอื่น');
         updateRoomAvailability();
         return;
     }

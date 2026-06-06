@@ -274,7 +274,7 @@ async function completeAndReturn(bookingCode) {
 }
 
 async function deleteBooking(id, bookingCode) {
-  if (!confirm(`ต้องการลบประวัติการจอง ${bookingCode} ใช่หรือไม่?\nการลบจะไม่สามารถกู้คืนได้`)) return;
+  if (!confirm(`ต้องการลบประวัติการเช่า ${bookingCode} ใช่หรือไม่?\nการลบจะไม่สามารถกู้คืนได้`)) return;
   await apiFetch('/api/admin/bookings/delete', 'POST', { id });
   loadStatus();
 }

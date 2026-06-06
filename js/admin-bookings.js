@@ -115,7 +115,7 @@ async function saveBooking() {
 }
 
 async function deleteBooking(id) {
-  if (!confirm('ต้องการลบรายการจองนี้ใช่หรือไม่?')) return;
+  if (!confirm('ต้องการลบรายการเช่านี้ใช่หรือไม่?')) return;
   await apiFetch('/api/admin/bookings/delete', 'POST', { id });
   loadBookings();
 }

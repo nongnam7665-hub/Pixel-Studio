@@ -46,7 +46,7 @@ if (!booking) {
 
     summary.innerHTML = `
         <p><span>แพ็กเกจ</span><strong>${booking.packageName || 'Studio Custom Package'}</strong></p>
-        <p><span>ผู้จอง</span><strong>${booking.customerName || '-'}</strong></p>
+        <p><span>ผู้เช่า</span><strong>${booking.customerName || '-'}</strong></p>
         <p><span>วันที่ถ่าย</span><strong>${formatDate(booking.shootDate)}</strong></p>
         <p><span>เวลา</span><strong>${booking.bookingTime || '-'}</strong></p>
         ${booking.type === 'custom' ? `<p><span>ห้อง</span><strong>${booking.roomName || '-'}</strong></p>` : ''}
@@ -186,13 +186,13 @@ function buildReceiptHtml(receipt) {
     </div>
     <section class="grid">
       <div class="box">
-        <h2>ข้อมูลการจอง</h2>
+        <h2>ข้อมูลการเช่า</h2>
         <p><span>แพ็กเกจ</span><strong>${escapeHtml(booking.packageName || 'Studio Custom Package')}</strong></p>
         <p><span>รหัสแพ็กเกจ</span><strong>${escapeHtml(booking.package || '-')}</strong></p>
         <p><span>ระยะเวลาแพ็กเกจ</span><strong>${escapeHtml(booking.packageDuration || '-')}</strong></p>
         <p><span>ธีมการถ่าย</span><strong>${escapeHtml(booking.themeName || '-')}</strong></p>
-        <p><span>ผู้จอง</span><strong>${escapeHtml(booking.customerName || '-')}</strong></p>
-        <p><span>วันที่ทำรายการจอง</span><strong>${escapeHtml(bookingCreatedAt)}</strong></p>
+        <p><span>ผู้เช่า</span><strong>${escapeHtml(booking.customerName || '-')}</strong></p>
+        <p><span>วันที่ทำรายการเช่า</span><strong>${escapeHtml(bookingCreatedAt)}</strong></p>
         <p><span>วันที่ถ่าย</span><strong>${escapeHtml(formatDate(booking.shootDate))}</strong></p>
         <p><span>เวลาถ่าย</span><strong>${escapeHtml(booking.bookingTime)}</strong></p>
       </div>
@@ -214,7 +214,7 @@ function buildReceiptHtml(receipt) {
         <p><span>มัดจำ 30%</span><strong>${escapeHtml(depositAmountValue.toLocaleString('th-TH'))} บาท</strong></p>
         <p><span>ธีมที่เลือก</span><strong>${escapeHtml(booking.themeName || '-')}</strong></p>
         <p><span>รายการเสริมที่เลือก</span><strong>${escapeHtml(getAddonText())}</strong></p>
-        <p><span>หมายเหตุการจอง</span><strong>${escapeHtml(booking.notes || 'ไม่มี')}</strong></p>
+        <p><span>หมายเหตุการเช่า</span><strong>${escapeHtml(booking.notes || 'ไม่มี')}</strong></p>
         <p><span>หมายเหตุการชำระเงิน</span><strong>${escapeHtml(receipt.note || 'ไม่มี')}</strong></p>
       </div>
     </section>
@@ -237,7 +237,7 @@ function showReceipt(receipt) {
     const depositValue = Math.round(totalAmount * 0.3);
     receiptPreview.innerHTML = `
         <p><span>เลขที่บิล</span><strong>${receiptNumber}</strong></p>
-        <p><span>ผู้จอง</span><strong>${escapeHtml(booking.customerName || '-')}</strong></p>
+        <p><span>ผู้เช่า</span><strong>${escapeHtml(booking.customerName || '-')}</strong></p>
         <p><span>แพ็กเกจ</span><strong>${escapeHtml(booking.packageName || 'Studio Custom Package')}</strong></p>
         <p><span>วันที่ถ่าย</span><strong>${escapeHtml(formatDate(booking.shootDate))}</strong></p>
         <p><span>เวลา</span><strong>${escapeHtml(booking.bookingTime)}</strong></p>
@@ -341,7 +341,7 @@ document.getElementById('paymentForm').addEventListener('submit', async (event) 
         if (!finalBookingCode) {
             const customerName = (currentUser ? currentUser.username || '' : '') || booking.customerName || '';
             if (!customerName || !booking.room || !booking.shootDate || !booking.bookingTime) {
-                alert('ข้อมูลการจองไม่ครบ กรุณาเริ่มจองใหม่');
+                alert('ข้อมูลการเช่าไม่ครบ กรุณาเริ่มเช่าใหม่');
                 return;
             }
             const bookRes = await fetch(getApiBase() + '/api/bookings', {
@@ -367,7 +367,7 @@ document.getElementById('paymentForm').addEventListener('submit', async (event) 
             });
             const bookData = await bookRes.json();
             if (!bookData.bookingCode) {
-                alert('ไม่สามารถบันทึกการจองได้: ' + (bookData.error || 'เกิดข้อผิดพลาด'));
+                alert('ไม่สามารถบันทึกการเช่าได้: ' + (bookData.error || 'เกิดข้อผิดพลาด'));
                 return;
             }
             finalBookingCode = bookData.bookingCode;

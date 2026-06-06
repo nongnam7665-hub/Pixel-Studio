@@ -78,7 +78,7 @@ async function loadAdminMessages() {
         document.getElementById('admin-msg-list').innerHTML = bookings.map(b => `
             <div style="background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:10px;border-left:4px solid ${statusColor[b.status] || '#6a18d4'};">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${b.adminMessage ? '8px' : '0'};">
-                    <span style="font-weight:700;color:#5d22b2;font-size:0.9rem;">รหัสจอง: ${escHtml(b.bookingCode)}</span>
+                    <span style="font-weight:700;color:#5d22b2;font-size:0.9rem;">รหัสเช่า: ${escHtml(b.bookingCode)}</span>
                     <span style="font-size:0.85rem;font-weight:600;color:${statusColor[b.status] || '#6a18d4'};">${statusLabel[b.status] || b.status}</span>
                 </div>
                 ${b.adminMessage ? `<p style="margin:0;color:#444;font-size:0.95rem;border-top:1px solid #f0e6ff;padding-top:8px;">💬 ${escHtml(b.adminMessage)}</p>` : ''}

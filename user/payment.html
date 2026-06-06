@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="th">
 
 <head>
@@ -35,7 +35,7 @@
         <section class="payment-section">
             <div class="payment-header">
                 <span class="step-label">ขั้นตอนสุดท้าย</span>
-                <h1>ชำระเงินและยืนยันการจอง</h1>
+                <h1>ชำระเงินและยืนยันการเช่า</h1>
                 <p>เลือกวิธีชำระเงิน ตรวจสอบยอดรวม แล้วส่งหลักฐานเพื่อให้ทีมงานยืนยันคิวของคุณ</p>
             </div>
 
@@ -80,8 +80,7 @@
                                 <input type="hidden" id="paymentDate">
                             </label>
                             <label class="form-field">
-                                <span>เวลาโอน</span>
-                                <input type="time" id="paymentTime" required>
+                                <input type="hidden" id="paymentTime">
                             </label>
                             <label class="form-field">
                                 <span>จำนวนเงิน</span>
@@ -98,7 +97,7 @@
             </div>
 
             <aside class="booking-summary">
-                <h2>สรุปรายการจอง</h2>
+                <h2>สรุปรายการเช่า</h2>
                 <div id="bookingSummary" class="summary-list"></div>
                 <div class="total-row">
                     <span>ยอดรวมทั้งหมด</span>
@@ -109,7 +108,7 @@
                     <strong id="depositAmount">0 บาท</strong>
                 </div>
                 <button type="submit" form="paymentForm" class="confirm-btn">ยืนยันการชำระเงิน</button>
-                <a href="checkout.html" class="edit-link" id="editBookingLink">แก้ไขรายการจอง</a>
+                <a href="checkout.html" class="edit-link" id="editBookingLink">แก้ไขรายการเช่า</a>
             </aside>
         </section>
     </main>

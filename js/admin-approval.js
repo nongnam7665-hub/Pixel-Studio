@@ -1,4 +1,4 @@
-const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+﻿const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
 if (!currentUser || currentUser.role !== 'admin') {
   window.location.href = 'index.html';
 } else {
@@ -79,11 +79,11 @@ async function loadApproval() {
     <div class="approval-card">
       <div class="approval-card-header">
         <code class="booking-code">${b.bookingCode}</code>
-        <span class="booking-date">จองเมื่อ ${fmt(b.createdAt)}</span>
+        <span class="booking-date">เช่าเมื่อ ${fmt(b.createdAt)}</span>
       </div>
 
       <div class="approval-info-grid">
-        <div class="approval-info-item"><span class="info-label">ชื่อผู้จอง</span><span class="info-val">${b.customerName}</span></div>
+        <div class="approval-info-item"><span class="info-label">ชื่อผู้เช่า</span><span class="info-val">${b.customerName}</span></div>
         <div class="approval-info-item"><span class="info-label">ห้อง</span><span class="info-val">ห้อง ${b.room}</span></div>
         <div class="approval-info-item"><span class="info-label">วันที่ถ่าย</span><span class="info-val">${fmtDate(b.shootDate)}</span></div>
         <div class="approval-info-item"><span class="info-label">เวลา</span><span class="info-val">${b.bookingTime}</span></div>
@@ -131,7 +131,7 @@ function updateBookingStatus(bookingCode, status) {
   document.getElementById('msg-bookingCode').value = bookingCode;
   document.getElementById('msg-status').value = status;
   document.getElementById('msg-modal-title').textContent =
-    status === 'approved' ? '✅ อนุมัติการจอง' : '❌ ปฏิเสธการจอง';
+    status === 'approved' ? '✅ อนุมัติการเช่า' : '❌ ปฏิเสธการเช่า';
   document.getElementById('admin-message').value = '';
   document.getElementById('msg-modal').classList.add('open');
 }
