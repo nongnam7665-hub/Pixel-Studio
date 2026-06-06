@@ -50,10 +50,9 @@ function esc(s) { return String(s).replace(/'/g, "\\'"); }
 async function loadReturns() {
   const { returns = [] } = await apiFetch('/api/admin/returns');
   const tbody = document.getElementById('returns-tbody');
-  if (!returns.length) { tbody.innerHTML = emptyRow(6, 'ไม่มีข้อมูลการคืนห้อง'); return; }
+  if (!returns.length) { tbody.innerHTML = emptyRow(5, 'ไม่มีข้อมูลการคืนห้อง'); return; }
   tbody.innerHTML = returns.map(r => `
     <tr>
-      <td><code>${r.bookingCode}</code></td>
       <td>${fmtDate(r.returnDate)}</td>
       <td>${r.roomCondition || '-'}</td>
       <td>${r.equipmentNotes || '-'}</td>
