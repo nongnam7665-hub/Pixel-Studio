@@ -337,12 +337,11 @@ function getApiBase() {
 document.getElementById('studioForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
-    const customerName = document.getElementById('customerName').value.trim();
+    const customerName = currentUser ? `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() : '';
     const shootDate = document.getElementById('shootDate').value;
     const bookingTime = document.getElementById('bookingTime').value;
     const notes = document.getElementById('notes').value;
 
-    if (!customerName) { alert('กรุณากรอกชื่อผู้จอง'); return; }
     if (!bookingTime) { alert('กรุณาเลือกเวลานัดถ่ายภาพ'); return; }
     if (!shootDate) { alert('กรุณาเลือกวันที่ถ่ายภาพ'); return; }
 
@@ -403,9 +402,6 @@ document.getElementById('studioForm').addEventListener('submit', async function(
 
 function restoreFields() {
     if (!currentBooking) return;
-
-    const nameEl = document.getElementById('customerName');
-    if (nameEl) nameEl.value = currentBooking.customerName || '';
 
     if (currentBooking.bookingTime) {
         timeSelect.value = currentBooking.bookingTime;
