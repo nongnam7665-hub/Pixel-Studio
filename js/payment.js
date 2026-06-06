@@ -59,7 +59,10 @@ if (!booking) {
     const _yyyy = _today.getFullYear();
     document.getElementById('paymentDateDisplay').value = `${_dd}/${_mm}/${_yyyy}`;
     paymentDate.value = `${_yyyy}-${_mm}-${_dd}`;
-    payerName.value = booking.customerName || '';
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    payerName.value = currentUser ? `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() : (booking.customerName || '');
+    const payerPhoneEl = document.getElementById('payerPhone');
+    if (payerPhoneEl && currentUser && currentUser.phone) payerPhoneEl.value = currentUser.phone;
     editBookingLink.href = booking.type === 'custom' ? 'studio.html' : `checkout.html?package=${packageId}`;
 }
 
