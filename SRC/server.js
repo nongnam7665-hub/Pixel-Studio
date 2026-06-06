@@ -536,6 +536,19 @@ async function handleApi(request, response, pathname, searchParams) {
     return true;
   }
 
+  if (pathname === '/api/admin/rooms/add') {
+    const { id, name, description, capacity, status } = body;
+    if (!id || !name) { sendJson(response, 400, { error: 'Missing fields' }); return true; }
+    const exists = await pool.query('SELECT id FROM rooms WHERE id=$1', [String(id).toUpperCase()]);
+    if (exists.rows.length) { sendJson(response, 409, { error: 'room_exists' }); return true; }
+    await pool.query(
+      'INSERT INTO rooms (id,name,description,capacity,status) VALUES ($1,$2,$3,$4,$5)',
+      [String(id).toUpperCase(), String(name), String(description || ''), Number(capacity || 4), String(status || 'available')]
+    );
+    sendJson(response, 200, { ok: true });
+    return true;
+  }
+
   if (pathname === '/api/admin/rooms/update') {
     const { id, name, description, capacity, status } = body;
     if (!id || !name) { sendJson(response, 400, { error: 'Missing fields' }); return true; }

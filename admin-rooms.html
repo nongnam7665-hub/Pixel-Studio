@@ -36,7 +36,10 @@
     <section class="tab-panel active">
       <div class="panel-header">
         <h2>ข้อมูลห้องสตูดิโอ</h2>
-        <button class="refresh-btn" onclick="loadRooms()">รีเฟรช</button>
+        <div style="display:flex;gap:8px;">
+          <button class="refresh-btn" onclick="loadRooms()">รีเฟรช</button>
+          <button class="btn-add-theme" onclick="openAddRoom()">+ เพิ่มห้อง</button>
+        </div>
       </div>
       <div class="rooms-grid" id="rooms-grid"></div>
     </section>
@@ -53,11 +56,15 @@
     </section>
   </main>
 
-  <!-- Modal แก้ไขห้อง -->
+  <!-- Modal แก้ไข/เพิ่มห้อง -->
   <div id="modal" class="modal-overlay">
     <div class="modal-box">
-      <h3 class="modal-title">แก้ไขข้อมูลห้องสตูดิโอ</h3>
+      <h3 class="modal-title" id="room-modal-title">แก้ไขข้อมูลห้องสตูดิโอ</h3>
       <input type="hidden" id="edit-id">
+      <div class="form-group" id="room-id-group">
+        <label>รหัสห้อง (เช่น E, F)</label>
+        <input type="text" id="edit-new-id" placeholder="E" maxlength="5">
+      </div>
 
       <!-- รูปภาพ -->
       <div class="form-group">

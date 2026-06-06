@@ -83,11 +83,30 @@ async function loadRooms() {
     </div>`).join('');
 }
 
+function openAddRoom() {
+  document.getElementById('room-modal-title').textContent = 'เพิ่มห้องใหม่';
+  document.getElementById('edit-id').value = '';
+  document.getElementById('room-id-group').style.display = 'block';
+  document.getElementById('edit-new-id').value = '';
+  document.getElementById('edit-name').value = '';
+  document.getElementById('edit-description').value = '';
+  document.getElementById('edit-capacity').value = '4';
+  document.getElementById('edit-status').value = 'available';
+  document.getElementById('file-input').value = '';
+  pendingImageData = null;
+  document.getElementById('img-preview').src = '';
+  document.getElementById('img-preview').classList.remove('visible');
+  document.getElementById('upload-placeholder').style.display = 'block';
+  document.getElementById('modal').classList.add('open');
+}
+
 function openEdit(id) {
   const r = roomsData.find(x => x.id === id);
   if (!r) return;
 
+  document.getElementById('room-modal-title').textContent = 'แก้ไขข้อมูลห้องสตูดิโอ';
   document.getElementById('edit-id').value = r.id;
+  document.getElementById('room-id-group').style.display = 'none';
   document.getElementById('edit-name').value = r.name;
   document.getElementById('edit-description').value = r.description || '';
   document.getElementById('edit-capacity').value = r.capacity;
@@ -118,16 +137,26 @@ function closeModal() {
 
 async function saveRoom() {
   const id = document.getElementById('edit-id').value;
+  const isAdd = !id;
   const name = document.getElementById('edit-name').value.trim();
   const description = document.getElementById('edit-description').value.trim();
   const capacity = Number(document.getElementById('edit-capacity').value);
   const status = document.getElementById('edit-status').value;
   if (!name) { alert('กรุณากรอกชื่อห้อง'); return; }
 
-  await apiFetch('/api/admin/rooms/update', 'POST', { id, name, description, capacity, status });
-
-  if (pendingImageData) {
-    await apiFetch('/api/admin/rooms/image', 'POST', { id, imageData: pendingImageData });
+  if (isAdd) {
+    const newId = document.getElementById('edit-new-id').value.trim().toUpperCase();
+    if (!newId) { alert('กรุณากรอกรหัสห้อง'); return; }
+    const result = await apiFetch('/api/admin/rooms/add', 'POST', { id: newId, name, description, capacity, status });
+    if (result.error === 'room_exists') { alert(`รหัสห้อง "${newId}" มีอยู่แล้ว`); return; }
+    if (pendingImageData) {
+      await apiFetch('/api/admin/rooms/image', 'POST', { id: newId, imageData: pendingImageData });
+    }
+  } else {
+    await apiFetch('/api/admin/rooms/update', 'POST', { id, name, description, capacity, status });
+    if (pendingImageData) {
+      await apiFetch('/api/admin/rooms/image', 'POST', { id, imageData: pendingImageData });
+    }
   }
 
   closeModal();
