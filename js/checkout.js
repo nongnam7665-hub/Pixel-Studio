@@ -64,14 +64,12 @@ function initPage() {
             ${currentBooking ? `<p class="summary-detail">ชื่อผู้จอง: ${currentBooking.customerName}</p><p class="summary-detail">เวลา: ${currentBooking.bookingTime}</p>${currentBooking.roomName ? `<p class="summary-detail">ห้อง: ${currentBooking.roomName}</p>` : ''}` : ''}
         </div>
     `;
-    const nameInput = document.getElementById('customerName');
     const timeSelect = document.getElementById('bookingTime');
     const dateInput = document.getElementById('shootDate');
     const notesInput = document.getElementById('notes');
     const personCountEl = document.getElementById('personCount');
 
     if (currentBooking) {
-        if (nameInput) nameInput.value = currentBooking.customerName || '';
         if (timeSelect) timeSelect.value = currentBooking.bookingTime || '';
         if (currentBooking.shootDate) {
             const isoDate = currentBooking.shootDate.split('T')[0];
@@ -169,11 +167,11 @@ document.getElementById('checkoutForm').addEventListener('submit', function(e) {
 
     const shootDate = document.getElementById('shootDate').value;
     const notes = document.getElementById('notes').value;
-    const customerName = document.getElementById('customerName').value.trim();
+    const customerName = currentUser ? `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() : '';
     const bookingTime = document.getElementById('bookingTime').value;
 
-    if (!customerName || !bookingTime) {
-        alert('กรุณากรอกชื่อผู้จองและเลือกเวลา');
+    if (!bookingTime) {
+        alert('กรุณาเลือกเวลา');
         return;
     }
 
