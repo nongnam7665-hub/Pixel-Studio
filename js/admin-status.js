@@ -195,14 +195,8 @@ async function loadStatus() {
       ${cdCell}
       <td>${badge(b.status)}</td>
       <td>
-        <select class="status-select" onchange="if(this.value) updateBookingStatus('${b.bookingCode}', this.value)">
-          <option value="">เปลี่ยนสถานะ</option>
-          <option value="pending">รอดำเนินการ</option>
-          <option value="approved">อนุมัติ</option>
-          <option value="active">กำลังใช้งาน</option>
-          <option value="completed">เสร็จสิ้น</option>
-          <option value="cancelled">ยกเลิก</option>
-        </select>
+        <button class="action-btn approve" onclick="updateBookingStatus('${b.bookingCode}','active')">กำลังใช้งาน</button>
+        <button class="action-btn edit" onclick="updateBookingStatus('${b.bookingCode}','completed')">เสร็จสิ้น</button>
       </td>
       <td>
         <button class="action-btn edit" onclick="openEdit(${b.id},'${esc(b.customerName)}','${b.room}','${b.shootDate}','${esc(b.bookingTime)}',${b.persons||1},'${esc(b.themeName||'')}',${b.totalPrice})">แก้ไข</button>
