@@ -333,11 +333,16 @@ document.getElementById('paymentForm').addEventListener('submit', async (event) 
         // Step 1: save booking to DB (only once — skip if already has a bookingCode)
         let finalBookingCode = booking.bookingCode || '';
         if (!finalBookingCode) {
+            const customerName = (currentUser ? `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() : '') || booking.customerName || '';
+            if (!customerName || !booking.room || !booking.shootDate || !booking.bookingTime) {
+                alert('ข้อมูลการจองไม่ครบ กรุณาเริ่มจองใหม่');
+                return;
+            }
             const bookRes = await fetch(getApiBase() + '/api/bookings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    customerName: booking.customerName,
+                    customerName,
                     customerEmail: currentUser?.email || '',
                     packageName: booking.packageName,
                     shootType: booking.shootType || '',
@@ -351,15 +356,17 @@ document.getElementById('paymentForm').addEventListener('submit', async (event) 
                     themeName: booking.themeName || booking.theme || '',
                     services: booking.services || booking.addons || [],
                     notes: booking.notes || '',
-                    totalPrice: booking.packagePrice || booking.totalPriceValue || 0,
+                    totalPrice: booking.totalPriceValue || booking.packagePrice || 0,
                 })
             });
             const bookData = await bookRes.json();
-            if (bookData.bookingCode) {
-                finalBookingCode = bookData.bookingCode;
-                booking.bookingCode = finalBookingCode;
-                localStorage.setItem('currentBooking', JSON.stringify(booking));
+            if (!bookData.bookingCode) {
+                alert('ไม่สามารถบันทึกการจองได้: ' + (bookData.error || 'เกิดข้อผิดพลาด'));
+                return;
             }
+            finalBookingCode = bookData.bookingCode;
+            booking.bookingCode = finalBookingCode;
+            localStorage.setItem('currentBooking', JSON.stringify(booking));
         }
         receipt.bookingCode = finalBookingCode;
 
@@ -380,6 +387,10 @@ document.getElementById('paymentForm').addEventListener('submit', async (event) 
             })
         });
         const payData = await payRes.json();
+        if (!payData.id) {
+            alert('ไม่สามารถบันทึกการชำระเงินได้: ' + (payData.error || 'เกิดข้อผิดพลาด'));
+            return;
+        }
 
         // Step 3: upload slip
         const slipFile = document.getElementById('paymentSlip').files[0];

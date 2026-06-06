@@ -69,9 +69,9 @@ async function loadApproval() {
         </div>
         ${pay.slipPath ? `
         <div class="slip-preview-wrap">
-          <img class="slip-preview-img" src="${getApiBase()}/${pay.slipPath}" alt="สลิป"
-            onclick="openSlip('${esc(pay.slipPath)}','${esc(b.bookingCode)}','${esc(pay.payerName)}','${esc(pay.paymentDate||'')}',${pay.paidAmount})">
-          <button class="btn-slip" onclick="openSlip('${esc(pay.slipPath)}','${esc(b.bookingCode)}','${esc(pay.payerName)}','${esc(pay.paymentDate||'')}',${pay.paidAmount})">ดูสลิปเต็ม</button>
+          <img class="slip-preview-img" src="${getApiBase()}/api/payments/slip-image?id=${pay.id}" alt="สลิป"
+            onclick="openSlip(${pay.id},'${esc(b.bookingCode)}','${esc(pay.payerName)}','${esc(pay.paymentDate||'')}',${pay.paidAmount})">
+          <button class="btn-slip" onclick="openSlip(${pay.id},'${esc(b.bookingCode)}','${esc(pay.payerName)}','${esc(pay.paymentDate||'')}',${pay.paidAmount})">ดูสลิปเต็ม</button>
         </div>` : '<p style="color:#bbb;font-size:0.85rem;">ยังไม่มีสลิป</p>'}
       </div>` : `<p style="color:#bbb;font-size:0.85rem;padding:8px 0;">ยังไม่มีข้อมูลการชำระเงิน</p>`;
 
@@ -105,8 +105,8 @@ async function loadApproval() {
   }).join('');
 }
 
-function openSlip(slipPath, bookingCode, payerName, paymentDate, paidAmount) {
-  const url = `${getApiBase()}/${slipPath}`;
+function openSlip(payId, bookingCode, payerName, paymentDate, paidAmount) {
+  const url = `${getApiBase()}/api/payments/slip-image?id=${payId}`;
   const img = document.getElementById('slip-img');
   const noImg = document.getElementById('slip-no-img');
   document.getElementById('slip-modal-title').textContent = `สลิปการชำระเงิน — ${bookingCode}`;
