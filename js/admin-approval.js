@@ -217,3 +217,75 @@ document.getElementById('edit-shootDateDisplay').addEventListener('input', funct
 });
 
 loadApproval();
+
+// ── ประวัติการชำระเงินทั้งหมด ──────────────────────────────────────
+
+const PAY_STATUS_MAP = {
+  pending_review: ['รอตรวจสอบ', 'badge-pending'],
+  verified:       ['ยืนยันแล้ว', 'badge-approved'],
+  rejected:       ['ปฏิเสธ',     'badge-cancelled'],
+};
+
+function payBadge(status) {
+  const [label, cls] = PAY_STATUS_MAP[status] || [status, 'badge-pending'];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+async function loadPayments() {
+  const { payments = [] } = await apiFetch('/api/admin/payments');
+  const tbody = document.getElementById('payments-tbody');
+  if (!payments.length) { tbody.innerHTML = `<tr><td colspan="9" class="empty-cell">ไม่มีข้อมูลการชำระเงิน</td></tr>`; return; }
+  tbody.innerHTML = payments.map(p => {
+    const slipCell = p.slipPath
+      ? `<td><img class="slip-thumb" src="${getApiBase()}/${p.slipPath}" alt="สลิป" onclick="openSlipFromPayment(${p.id},'${esc(p.slipPath)}','${esc(p.bookingCode)}','${esc(p.payerName)}','${esc(p.paymentDate||'')}',${p.paidAmount})"></td>`
+      : `<td><span style="color:#bbb;font-size:0.8rem;">ไม่มีสลิป</span></td>`;
+    return `
+    <tr>
+      <td><code>${p.bookingCode}</code></td>
+      <td>${p.payerName}</td>
+      <td>${p.payerPhone || '-'}</td>
+      <td>${p.paymentMethod}</td>
+      <td>${Number(p.paidAmount).toLocaleString('th-TH')}</td>
+      <td>${fmtDate(p.paymentDate)}</td>
+      ${slipCell}
+      <td>${payBadge(p.status)}</td>
+      <td>
+        ${p.slipPath ? `<button class="btn-slip" onclick="openSlipFromPayment(${p.id},'${esc(p.slipPath)}','${esc(p.bookingCode)}','${esc(p.payerName)}','${esc(p.paymentDate||'')}',${p.paidAmount})">ดูสลิป</button>` : ''}
+        ${p.status === 'pending_review' ? `
+          <button class="action-btn approve" onclick="updatePaymentStatus(${p.id},'verified')">ยืนยัน</button>
+          <button class="action-btn reject"  onclick="updatePaymentStatus(${p.id},'rejected')">ปฏิเสธ</button>` : ''}
+        <button class="action-btn delete" onclick="deletePayment(${p.id})">ลบ</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function openSlipFromPayment(id, slipPath, bookingCode, payerName, paymentDate, paidAmount) {
+  const url = `${getApiBase()}/${slipPath}`;
+  const img = document.getElementById('slip-img');
+  const noImg = document.getElementById('slip-no-img');
+  document.getElementById('slip-modal-title').textContent = `สลิปการชำระเงิน — ${bookingCode}`;
+  document.getElementById('slip-meta').innerHTML = `
+    <strong>ผู้ชำระ:</strong> ${payerName}<br>
+    <strong>วันที่ชำระ:</strong> ${fmtDate(paymentDate)}<br>
+    <strong>จำนวน:</strong> ${Number(paidAmount).toLocaleString('th-TH')} บาท
+  `;
+  document.getElementById('slip-open-link').href = url;
+  img.src = url;
+  img.style.display = 'block';
+  noImg.style.display = 'none';
+  document.getElementById('slip-modal').classList.add('open');
+}
+
+async function updatePaymentStatus(id, status) {
+  await apiFetch('/api/admin/payments/status', 'POST', { id, status });
+  loadPayments();
+}
+
+async function deletePayment(id) {
+  if (!confirm('ต้องการลบรายการชำระเงินนี้ใช่หรือไม่?')) return;
+  await apiFetch('/api/admin/payments/delete', 'POST', { id });
+  loadPayments();
+}
+
+loadPayments();
