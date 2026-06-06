@@ -199,7 +199,6 @@ async function loadStatus() {
         <button class="action-btn edit" onclick="completeAndReturn('${b.bookingCode}')">หมดเวลา</button>
       </td>
       <td>
-        <button class="action-btn edit" onclick="openEdit(${b.id},'${esc(b.customerName)}','${b.room}','${b.shootDate}','${esc(b.bookingTime)}',${b.persons||1},'${esc(b.themeName||'')}',${b.totalPrice})">แก้ไข</button>
         <button class="action-btn delete" onclick="deleteBooking(${b.id},'${esc(b.bookingCode)}')">ลบ</button>
       </td>
     </tr>`;
