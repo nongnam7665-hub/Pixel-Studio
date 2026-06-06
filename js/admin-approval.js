@@ -1,4 +1,4 @@
-﻿const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
 if (!currentUser || currentUser.role !== 'admin') {
   window.location.href = 'index.html';
 } else {
@@ -25,26 +25,17 @@ async function apiFetch(path, method = 'GET', body = null) {
   return res.json();
 }
 
-function fmt(str) {
-  if (!str) return '-';
-  const d = new Date(str);
-  if (isNaN(d)) return str;
-  const dd = String(d.getDate()).padStart(2, '0');
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const yyyy = d.getFullYear();
-  const hh = String(d.getHours()).padStart(2, '0');
-  const min = String(d.getMinutes()).padStart(2, '0');
-  return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
-}
-
-function emptyRow(cols, msg) {
-  return `<tr><td colspan="${cols}" class="empty-cell">${msg}</td></tr>`;
-}
-
 function fmtDate(str) {
   if (!str) return '-';
   const [y, m, d] = String(str).split('T')[0].split('-');
   return (y && m && d) ? `${d}/${m}/${y}` : str;
+}
+
+function fmt(str) {
+  if (!str) return '-';
+  const d = new Date(str);
+  if (isNaN(d)) return str;
+  return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
 }
 
 function esc(s) { return String(s).replace(/'/g, "\\'"); }
@@ -56,53 +47,65 @@ async function loadApproval() {
   ]);
 
   const pending = bookings.filter(b => b.status === 'pending');
-  const tbody = document.getElementById('approval-tbody');
-  if (!pending.length) { tbody.innerHTML = emptyRow(9, 'ไม่มีรายการรอการอนุมัติ'); return; }
+  const list = document.getElementById('approval-list');
 
-  tbody.innerHTML = pending.map(b => {
+  if (!pending.length) {
+    list.innerHTML = '<p class="empty-cell" style="padding:32px;text-align:center;">ไม่มีรายการรอการอนุมัติ</p>';
+    return;
+  }
+
+  list.innerHTML = pending.map(b => {
     const pays = payments.filter(p => p.bookingCode === b.bookingCode);
-    const latestPay = pays.length ? pays[pays.length - 1] : null;
+    const pay = pays.length ? pays[pays.length - 1] : null;
 
-    let payCell = `<td><span class="payment-pill pay-none">ยังไม่ชำระ</span></td>`;
-    if (latestPay) {
-      const statusLabel = { pending_review: 'รอตรวจสอบ', verified: 'ยืนยันแล้ว', rejected: 'ปฏิเสธ' };
-      const statusClass = { pending_review: 'pay-pending', verified: 'pay-verified', rejected: 'pay-rejected' };
-      const pill = `<span class="payment-pill ${statusClass[latestPay.status] || 'pay-pending'}">${statusLabel[latestPay.status] || latestPay.status}</span>`;
-      const slipUrl = latestPay.id ? `${getApiBase()}/api/payments/slip-image?id=${latestPay.id}` : '';
-      const slipBtn = latestPay.slipPath
-        ? `<button class="btn-slip" style="margin-top:4px;" onclick="openSlip('${latestPay.id}','${esc(b.bookingCode)}','${esc(latestPay.payerName)}','${esc(latestPay.paymentDate||'')}',${latestPay.paidAmount})">ดูสลิป</button>`
-        : `<span style="font-size:0.75rem;color:#bbb;display:block;margin-top:2px;">ไม่มีสลิป</span>`;
-      payCell = `<td style="vertical-align:top;">
-        ${pill}<br>
-        <small style="color:#9b6bc5;">${Number(latestPay.paidAmount).toLocaleString('th-TH')} บาท</small><br>
-        ${slipBtn}
-        ${slipUrl ? `<img class="slip-thumb" style="margin-top:6px;" src="${slipUrl}" alt="สลิป"
-          onclick="openSlip('${latestPay.id}','${esc(b.bookingCode)}','${esc(latestPay.payerName)}','${esc(latestPay.paymentDate||'')}',${latestPay.paidAmount})">` : ''}
-      </td>`;
-    }
+    const paySection = pay ? `
+      <div class="approval-pay-row">
+        <div class="approval-info-grid">
+          <div class="approval-info-item"><span class="info-label">วิธีชำระ</span><span class="info-val">${pay.paymentMethod || '-'}</span></div>
+          <div class="approval-info-item"><span class="info-label">จำนวนที่ชำระ</span><span class="info-val">${Number(pay.paidAmount).toLocaleString('th-TH')} บาท</span></div>
+          <div class="approval-info-item"><span class="info-label">วันที่ชำระ</span><span class="info-val">${fmtDate(pay.paymentDate)}</span></div>
+          <div class="approval-info-item"><span class="info-label">สถานะสลิป</span><span class="info-val">${{ pending_review:'รอตรวจสอบ', verified:'ยืนยันแล้ว', rejected:'ปฏิเสธ' }[pay.status] || pay.status}</span></div>
+        </div>
+        ${pay.slipPath ? `
+        <div class="slip-preview-wrap">
+          <img class="slip-preview-img" src="${getApiBase()}/${pay.slipPath}" alt="สลิป"
+            onclick="openSlip('${esc(pay.slipPath)}','${esc(b.bookingCode)}','${esc(pay.payerName)}','${esc(pay.paymentDate||'')}',${pay.paidAmount})">
+          <button class="btn-slip" onclick="openSlip('${esc(pay.slipPath)}','${esc(b.bookingCode)}','${esc(pay.payerName)}','${esc(pay.paymentDate||'')}',${pay.paidAmount})">ดูสลิปเต็ม</button>
+        </div>` : '<p style="color:#bbb;font-size:0.85rem;">ยังไม่มีสลิป</p>'}
+      </div>` : `<p style="color:#bbb;font-size:0.85rem;padding:8px 0;">ยังไม่มีข้อมูลการชำระเงิน</p>`;
 
     return `
-    <tr>
-      <td><code>${b.bookingCode}</code></td>
-      <td>${b.customerName}</td>
-      <td>ห้อง ${b.room}</td>
-      <td>${fmtDate(b.shootDate)}</td>
-      <td>${b.bookingTime}</td>
-      <td>${Number(b.totalPrice).toLocaleString('th-TH')}</td>
-      ${payCell}
-      <td>${fmt(b.createdAt)}</td>
-      <td>
-        <button class="action-btn approve" onclick="updateBookingStatus('${b.bookingCode}','approved')">อนุมัติ</button>
-        <button class="action-btn reject"  onclick="updateBookingStatus('${b.bookingCode}','cancelled')">ปฏิเสธ</button>
-        <button class="action-btn edit" onclick="openEdit(${b.id},'${esc(b.customerName)}','${b.room}','${b.shootDate}','${esc(b.bookingTime)}',${b.persons||1},'${esc(b.themeName||'')}',${b.totalPrice})">แก้ไข</button>
-      </td>
-    </tr>`;
+    <div class="approval-card">
+      <div class="approval-card-header">
+        <code class="booking-code">${b.bookingCode}</code>
+        <span class="booking-date">จองเมื่อ ${fmt(b.createdAt)}</span>
+      </div>
+
+      <div class="approval-info-grid">
+        <div class="approval-info-item"><span class="info-label">ชื่อผู้จอง</span><span class="info-val">${b.customerName}</span></div>
+        <div class="approval-info-item"><span class="info-label">ห้อง</span><span class="info-val">ห้อง ${b.room}</span></div>
+        <div class="approval-info-item"><span class="info-label">วันที่ถ่าย</span><span class="info-val">${fmtDate(b.shootDate)}</span></div>
+        <div class="approval-info-item"><span class="info-label">เวลา</span><span class="info-val">${b.bookingTime}</span></div>
+        <div class="approval-info-item"><span class="info-label">จำนวนคน</span><span class="info-val">${b.persons || 1} ท่าน</span></div>
+        <div class="approval-info-item"><span class="info-label">ธีม</span><span class="info-val">${b.themeName || '-'}</span></div>
+        <div class="approval-info-item"><span class="info-label">ราคารวม</span><span class="info-val" style="color:#6a18d4;font-weight:700;">${Number(b.totalPrice).toLocaleString('th-TH')} บาท</span></div>
+      </div>
+
+      <div class="approval-pay-section">
+        <h4 class="pay-section-title">ข้อมูลการชำระเงิน</h4>
+        ${paySection}
+      </div>
+
+      <div class="approval-actions">
+        <button class="btn-approve" onclick="updateBookingStatus('${b.bookingCode}','approved')">✓ อนุมัติ</button>
+        <button class="btn-reject"  onclick="updateBookingStatus('${b.bookingCode}','cancelled')">✕ ปฏิเสธ</button>
+      </div>
+    </div>`;
   }).join('');
 }
 
-function openSlip(paymentId, bookingCode, payerName, paymentDate, paidAmount) {
-  const url = `${getApiBase()}/api/payments/slip-image?id=${paymentId}`;
-  const isPdf = false; // ตรวจสอบจาก response header แทน
+function openSlip(slipPath, bookingCode, payerName, paymentDate, paidAmount) {
+  const url = `${getApiBase()}/${slipPath}`;
   const img = document.getElementById('slip-img');
   const noImg = document.getElementById('slip-no-img');
   document.getElementById('slip-modal-title').textContent = `สลิปการชำระเงิน — ${bookingCode}`;
@@ -112,63 +115,15 @@ function openSlip(paymentId, bookingCode, payerName, paymentDate, paidAmount) {
     <strong>จำนวน:</strong> ${Number(paidAmount).toLocaleString('th-TH')} บาท
   `;
   document.getElementById('slip-open-link').href = url;
-  if (isPdf) {
-    img.style.display = 'none';
-    noImg.style.display = 'block';
-    noImg.textContent = 'ไฟล์ PDF — กดปุ่ม "เปิดในแท็บใหม่" เพื่อดู';
-  } else {
-    img.src = url;
-    img.style.display = 'block';
-    noImg.style.display = 'none';
-  }
+  img.src = url;
+  img.style.display = 'block';
+  noImg.style.display = 'none';
   document.getElementById('slip-modal').classList.add('open');
 }
 
 function closeSlipModal() {
   document.getElementById('slip-modal').classList.remove('open');
   document.getElementById('slip-img').src = '';
-}
-
-function setEditDate(displayId, hiddenId, isoDate) {
-  const clean = isoDate ? String(isoDate).split('T')[0] : '';
-  document.getElementById(hiddenId).value = clean;
-  if (clean) {
-    const [y, m, d] = clean.split('-');
-    document.getElementById(displayId).value = `${d}/${m}/${y}`;
-  } else {
-    document.getElementById(displayId).value = '';
-  }
-}
-
-function openEdit(id, customerName, room, shootDate, bookingTime, persons, themeName, totalPrice) {
-  document.getElementById('edit-id').value = id;
-  document.getElementById('edit-customerName').value = customerName;
-  document.getElementById('edit-room').value = room;
-  setEditDate('edit-shootDateDisplay', 'edit-shootDate', shootDate);
-  document.getElementById('edit-bookingTime').value = bookingTime;
-  document.getElementById('edit-persons').value = persons;
-  document.getElementById('edit-themeName').value = themeName;
-  document.getElementById('edit-totalPrice').value = totalPrice;
-  document.getElementById('modal').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-}
-
-async function saveBooking() {
-  const id = document.getElementById('edit-id').value;
-  const customerName = document.getElementById('edit-customerName').value.trim();
-  const room = document.getElementById('edit-room').value;
-  const shootDate = document.getElementById('edit-shootDate').value;
-  const bookingTime = document.getElementById('edit-bookingTime').value.trim();
-  const persons = Number(document.getElementById('edit-persons').value);
-  const themeName = document.getElementById('edit-themeName').value.trim();
-  const totalPrice = Number(document.getElementById('edit-totalPrice').value);
-  if (!customerName || !shootDate || !bookingTime) { alert('กรุณากรอกข้อมูลให้ครบ'); return; }
-  await apiFetch('/api/admin/bookings/update', 'POST', { id: Number(id), customerName, room, shootDate, bookingTime, persons, themeName, totalPrice });
-  closeModal();
-  loadApproval();
 }
 
 function updateBookingStatus(bookingCode, status) {
@@ -193,9 +148,6 @@ async function confirmStatus() {
   loadApproval();
 }
 
-document.getElementById('modal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('modal')) closeModal();
-});
 document.getElementById('msg-modal').addEventListener('click', (e) => {
   if (e.target === document.getElementById('msg-modal')) closeMsgModal();
 });
@@ -203,89 +155,4 @@ document.getElementById('slip-modal').addEventListener('click', (e) => {
   if (e.target === document.getElementById('slip-modal')) closeSlipModal();
 });
 
-document.getElementById('edit-shootDateDisplay').addEventListener('input', function() {
-  let digits = this.value.replace(/\D/g, '').slice(0, 8);
-  let v = digits;
-  if (digits.length > 2) v = digits.slice(0,2) + '/' + digits.slice(2);
-  if (digits.length > 4) v = digits.slice(0,2) + '/' + digits.slice(2,4) + '/' + digits.slice(4);
-  this.value = v;
-  if (digits.length === 8) {
-    document.getElementById('edit-shootDate').value = `${digits.slice(4,8)}-${digits.slice(2,4)}-${digits.slice(0,2)}`;
-  } else {
-    document.getElementById('edit-shootDate').value = '';
-  }
-});
-
 loadApproval();
-
-// ── ประวัติการชำระเงินทั้งหมด ──────────────────────────────────────
-
-const PAY_STATUS_MAP = {
-  pending_review: ['รอตรวจสอบ', 'badge-pending'],
-  verified:       ['ยืนยันแล้ว', 'badge-approved'],
-  rejected:       ['ปฏิเสธ',     'badge-cancelled'],
-};
-
-function payBadge(status) {
-  const [label, cls] = PAY_STATUS_MAP[status] || [status, 'badge-pending'];
-  return `<span class="badge ${cls}">${label}</span>`;
-}
-
-async function loadPayments() {
-  const { payments = [] } = await apiFetch('/api/admin/payments');
-  const tbody = document.getElementById('payments-tbody');
-  if (!payments.length) { tbody.innerHTML = `<tr><td colspan="9" class="empty-cell">ไม่มีข้อมูลการชำระเงิน</td></tr>`; return; }
-  tbody.innerHTML = payments.map(p => {
-    const slipCell = p.slipPath
-      ? `<td><img class="slip-thumb" src="${getApiBase()}/${p.slipPath}" alt="สลิป" onclick="openSlipFromPayment(${p.id},'${esc(p.slipPath)}','${esc(p.bookingCode)}','${esc(p.payerName)}','${esc(p.paymentDate||'')}',${p.paidAmount})"></td>`
-      : `<td><span style="color:#bbb;font-size:0.8rem;">ไม่มีสลิป</span></td>`;
-    return `
-    <tr>
-      <td><code>${p.bookingCode}</code></td>
-      <td>${p.payerName}</td>
-      <td>${p.payerPhone || '-'}</td>
-      <td>${p.paymentMethod}</td>
-      <td>${Number(p.paidAmount).toLocaleString('th-TH')}</td>
-      <td>${fmtDate(p.paymentDate)}</td>
-      ${slipCell}
-      <td>${payBadge(p.status)}</td>
-      <td>
-        ${p.slipPath ? `<button class="btn-slip" onclick="openSlipFromPayment(${p.id},'${esc(p.slipPath)}','${esc(p.bookingCode)}','${esc(p.payerName)}','${esc(p.paymentDate||'')}',${p.paidAmount})">ดูสลิป</button>` : ''}
-        ${p.status === 'pending_review' ? `
-          <button class="action-btn approve" onclick="updatePaymentStatus(${p.id},'verified')">ยืนยัน</button>
-          <button class="action-btn reject"  onclick="updatePaymentStatus(${p.id},'rejected')">ปฏิเสธ</button>` : ''}
-        <button class="action-btn delete" onclick="deletePayment(${p.id})">ลบ</button>
-      </td>
-    </tr>`;
-  }).join('');
-}
-
-function openSlipFromPayment(id, slipPath, bookingCode, payerName, paymentDate, paidAmount) {
-  const url = `${getApiBase()}/${slipPath}`;
-  const img = document.getElementById('slip-img');
-  const noImg = document.getElementById('slip-no-img');
-  document.getElementById('slip-modal-title').textContent = `สลิปการชำระเงิน — ${bookingCode}`;
-  document.getElementById('slip-meta').innerHTML = `
-    <strong>ผู้ชำระ:</strong> ${payerName}<br>
-    <strong>วันที่ชำระ:</strong> ${fmtDate(paymentDate)}<br>
-    <strong>จำนวน:</strong> ${Number(paidAmount).toLocaleString('th-TH')} บาท
-  `;
-  document.getElementById('slip-open-link').href = url;
-  img.src = url;
-  img.style.display = 'block';
-  noImg.style.display = 'none';
-  document.getElementById('slip-modal').classList.add('open');
-}
-
-async function updatePaymentStatus(id, status) {
-  await apiFetch('/api/admin/payments/status', 'POST', { id, status });
-  loadPayments();
-}
-
-async function deletePayment(id) {
-  if (!confirm('ต้องการลบรายการชำระเงินนี้ใช่หรือไม่?')) return;
-  await apiFetch('/api/admin/payments/delete', 'POST', { id });
-  loadPayments();
-}
-
-loadPayments();
