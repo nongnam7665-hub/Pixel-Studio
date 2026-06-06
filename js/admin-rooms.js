@@ -307,9 +307,7 @@ async function saveTheme() {
   let savedId = id ? Number(id) : null;
 
   if (isAdd) {
-    const slug = document.getElementById('theme-edit-slug').value.trim().toLowerCase().replace(/\s+/g,'-');
-    if (!slug) { alert('กรุณากรอก Slug'); return; }
-    if (!/^[a-z0-9-]+$/.test(slug)) { alert('Slug ต้องเป็น a-z, 0-9 และขีด - เท่านั้น'); return; }
+    const slug = 'theme-' + Date.now();
     const result = await apiFetch('/api/admin/themes/add', 'POST', { slug, name, description, price, color1, color2, sort_order });
     if (result.error) { alert(result.error); return; }
     savedId = result.id;
