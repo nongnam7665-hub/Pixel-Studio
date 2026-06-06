@@ -187,7 +187,6 @@ async function loadStatus() {
 
     return `
     <tr id="row-${b.bookingCode}">
-      <td><code>${b.bookingCode}</code></td>
       <td>${b.customerName}</td>
       <td>ห้อง ${b.room}</td>
       <td>${fmtDate(b.shootDate)}</td>
