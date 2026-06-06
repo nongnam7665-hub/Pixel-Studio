@@ -108,7 +108,28 @@ function esc(s) {
     .replace(/'/g, '&#39;');
 }
 
+function openAddPackage() {
+  document.getElementById('pkg-modal-title').textContent = 'เพิ่มแพ็กเกจใหม่';
+  document.getElementById('edit-id').value = '';
+  document.getElementById('edit-name').value = '';
+  document.getElementById('edit-description').value = '';
+  document.getElementById('edit-duration').value = '3 ชั่วโมง';
+  document.getElementById('edit-old-price').value = '0';
+  document.getElementById('edit-new-price').value = '0';
+  document.getElementById('edit-badge').value = '';
+  document.getElementById('edit-is-promo').checked = false;
+  document.getElementById('edit-sort-order').value = '0';
+  document.getElementById('file-input').value = '';
+  document.getElementById('features-list').innerHTML = '';
+  pendingImageData = null;
+  document.getElementById('img-preview').src = '';
+  document.getElementById('img-preview').classList.remove('visible');
+  document.getElementById('upload-placeholder').style.display = 'block';
+  document.getElementById('modal').classList.add('open');
+}
+
 function openEdit(id, pkg) {
+  document.getElementById('pkg-modal-title').textContent = 'แก้ไขแพ็กเกจ';
   document.getElementById('edit-id').value = id;
   document.getElementById('edit-name').value = pkg.name || '';
   document.getElementById('edit-description').value = pkg.description || '';
@@ -148,11 +169,11 @@ function closeModal() {
 
 async function savePackage() {
   const id = document.getElementById('edit-id').value;
+  const isAdd = !id;
   const name = document.getElementById('edit-name').value.trim();
   if (!name) { alert('กรุณากรอกชื่อแพ็กเกจ'); return; }
 
-  await apiFetch('/api/admin/packages/update', 'POST', {
-    id: Number(id),
+  const payload = {
     name,
     description: document.getElementById('edit-description').value.trim(),
     duration: document.getElementById('edit-duration').value.trim(),
@@ -162,10 +183,19 @@ async function savePackage() {
     is_promo: document.getElementById('edit-is-promo').checked,
     sort_order: Number(document.getElementById('edit-sort-order').value),
     features: getFeatures(),
-  });
+  };
 
-  if (pendingImageData) {
-    await apiFetch('/api/admin/packages/image', 'POST', { id: Number(id), imageData: pendingImageData });
+  let savedId;
+  if (isAdd) {
+    const result = await apiFetch('/api/admin/packages/add', 'POST', payload);
+    savedId = result.id;
+  } else {
+    savedId = Number(id);
+    await apiFetch('/api/admin/packages/update', 'POST', { id: savedId, ...payload });
+  }
+
+  if (pendingImageData && savedId) {
+    await apiFetch('/api/admin/packages/image', 'POST', { id: savedId, imageData: pendingImageData });
   }
 
   closeModal();

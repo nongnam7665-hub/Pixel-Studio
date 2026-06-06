@@ -633,6 +633,23 @@ async function handleApi(request, response, pathname, searchParams) {
     return true;
   }
 
+  if (pathname === '/api/admin/packages/add') {
+    const { name, description, duration, features, old_price, new_price, badge, is_promo, sort_order } = body;
+    if (!name) { sendJson(response, 400, { error: 'Missing fields' }); return true; }
+    const slug = 'pkg-' + Date.now();
+    const result = await pool.query(
+      'INSERT INTO packages (slug,name,description,duration,features,old_price,new_price,badge,is_promo,sort_order) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id',
+      [
+        slug, String(name), String(description || ''), String(duration || '3 ชั่วโมง'),
+        JSON.stringify(Array.isArray(features) ? features : []),
+        Number(old_price || 0), Number(new_price || 0),
+        badge ? String(badge) : null, is_promo ? 1 : 0, Number(sort_order || 0)
+      ]
+    );
+    sendJson(response, 200, { ok: true, id: result.rows[0].id });
+    return true;
+  }
+
   if (pathname === '/api/admin/packages/update') {
     const { id, name, description, duration, features, old_price, new_price, badge, is_promo, sort_order } = body;
     if (!id || !name) { sendJson(response, 400, { error: 'Missing fields' }); return true; }

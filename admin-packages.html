@@ -36,6 +36,7 @@
     <section class="tab-panel active">
       <div class="panel-header">
         <h2>ข้อมูลแพ็กเกจ</h2>
+        <button class="btn-add-theme" onclick="openAddPackage()">+ เพิ่มแพ็กเกจ</button>
       </div>
       <div class="packages-grid" id="packages-grid"></div>
     </section>
@@ -44,7 +45,7 @@
   <!-- Modal แก้ไขแพ็กเกจ -->
   <div id="modal" class="modal-overlay">
     <div class="modal-box">
-      <h3 class="modal-title">แก้ไขแพ็กเกจ</h3>
+      <h3 class="modal-title" id="pkg-modal-title">แก้ไขแพ็กเกจ</h3>
       <input type="hidden" id="edit-id">
 
       <!-- รูปภาพ -->
