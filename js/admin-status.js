@@ -193,7 +193,7 @@ async function loadStatus() {
       <td>${fmtDate(b.shootDate)}</td>
       <td>${b.bookingTime}<br><small style="color:#9b6bc5;">${durLabel}</small></td>
       ${cdCell}
-      <td>${badge(b.status)}</td>
+      <td>${isActive && endTime && Date.now() > endTime.getTime() ? '<span class="badge badge-cancelled">หมดเวลา</span>' : badge(b.status)}</td>
       <td>
         <button class="action-btn approve" onclick="updateBookingStatus('${b.bookingCode}','active')">กำลังใช้งาน</button>
         <button class="action-btn edit" onclick="completeAndReturn('${b.bookingCode}')">เสร็จสิ้น</button>
