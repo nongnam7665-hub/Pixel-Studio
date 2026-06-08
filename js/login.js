@@ -31,7 +31,7 @@ if (btnLogin) {
             if (adminRes.ok && adminData.admin) {
                 localStorage.setItem(CURRENT_USER_STORAGE_KEY, JSON.stringify(adminData.admin));
                 alert('เข้าสู่ระบบสำเร็จ!');
-                window.location.href = 'admin.html';
+                window.location.href = 'admin-approval.html';
                 return;
             }
             
