@@ -151,7 +151,9 @@ async function autoTriggerReturn(b) {
 
 async function loadStatus() {
   clearAllIntervals();
-  const { bookings = [] } = await apiFetch('/api/admin/bookings');
+  const { bookings: allBookings = [] } = await apiFetch('/api/admin/bookings');
+  const SHOW_STATUSES = ['pending', 'active', 'completed', 'expired'];
+  const bookings = allBookings.filter(b => SHOW_STATUSES.includes(b.status));
   const count = (s) => bookings.filter(b => b.status === s).length;
 
   document.getElementById('stat-cards').innerHTML = `
