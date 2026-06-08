@@ -27,13 +27,14 @@
     <a href="admin-packages.html" class="tab-btn active">แพ็กเกจ</a>
     <a href="admin-rooms.html"    class="tab-btn">ห้องสตูดิโอ</a>
     <a href="admin-users.html"    class="tab-btn">สมาชิก</a>
-    <a href="user/home.html"      class="tab-btn" style="margin-left:auto;background:#6a0dad;color:#fff;">🌐 ดูเว็บไซต์</a>  </nav>
+    <a href="user/home.html"      class="tab-btn tab-btn-website">🌐 ดูเว็บไซต์</a>
+  </nav>
 
   <main class="admin-content">
     <section class="tab-panel active">
       <div class="panel-header">
         <h2>ข้อมูลแพ็กเกจ</h2>
-        <button class="btn-add-theme" onclick="openAddPackage()">+ เพิ่มแพ็กเกจ</button>
+        <button class="btn-add-theme" id="btn-add-package">+ เพิ่มแพ็กเกจ</button>
       </div>
       <div class="packages-grid" id="packages-grid"></div>
     </section>
@@ -48,14 +49,14 @@
       <!-- รูปภาพ -->
       <div class="form-group">
         <label>รูปภาพแพ็กเกจ</label>
-        <div class="img-upload-area" onclick="document.getElementById('file-input').click()">
+        <div class="img-upload-area" id="img-upload-area">
           <img id="img-preview" class="img-preview" alt="ตัวอย่างรูป">
           <div id="upload-placeholder">
-            <div style="font-size:2rem; color:#b07ee8;">📷</div>
+            <div class="upload-icon">📷</div>
             <div class="upload-hint">คลิกเพื่อเลือกรูปภาพ</div>
             <div class="upload-hint">JPG, PNG, WEBP</div>
           </div>
-          <input type="file" id="file-input" accept="image/*" onchange="onFileSelected(event)">
+          <input type="file" id="file-input" accept="image/*">
         </div>
       </div>
 
@@ -80,13 +81,13 @@
         <input type="number" id="edit-new-price" min="0">
       </div>
       <div class="form-group">
-        <label>ป้ายกำกับ (badge) <span style="font-weight:400;color:#9b6bc5;">เช่น แนะนำ, VIP (ว่างเว้นหากไม่ต้องการ)</span></label>
+        <label>ป้ายกำกับ (badge) <span class="optional-label">เช่น แนะนำ, VIP (ว่างเว้นหากไม่ต้องการ)</span></label>
         <input type="text" id="edit-badge" placeholder="แนะนำ / VIP / ...">
       </div>
       <div class="form-group">
         <label>รายการสิ่งที่รวมอยู่</label>
         <div class="features-list" id="features-list"></div>
-        <button type="button" class="btn-add-feature" onclick="addFeatureRow('')">+ เพิ่มรายการ</button>
+        <button type="button" class="btn-add-feature" id="btn-add-feature">+ เพิ่มรายการ</button>
       </div>
       <div class="form-group">
         <div class="form-check-row">
@@ -100,8 +101,8 @@
       </div>
 
       <div class="modal-actions">
-        <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
-        <button class="btn-save" onclick="savePackage()">บันทึก</button>
+        <button class="btn-cancel" id="btn-cancel">ยกเลิก</button>
+        <button class="btn-save" id="btn-save">บันทึก</button>
       </div>
     </div>
   </div>

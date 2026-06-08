@@ -27,7 +27,8 @@
     <a href="admin-packages.html" class="tab-btn">แพ็กเกจ</a>
     <a href="admin-rooms.html"    class="tab-btn">ห้องสตูดิโอ</a>
     <a href="admin-users.html"    class="tab-btn">สมาชิก</a>
-    <a href="user/home.html"      class="tab-btn" style="margin-left:auto;background:#6a0dad;color:#fff;">🌐 ดูเว็บไซต์</a>  </nav>
+    <a href="user/home.html"      class="tab-btn tab-btn-website">🌐 ดูเว็บไซต์</a>
+  </nav>
 
   <main class="admin-content">
     <section class="tab-panel active">
@@ -42,12 +43,12 @@
   <div id="slip-modal" class="modal-overlay">
     <div class="slip-modal-box">
       <h3 id="slip-modal-title">สลิปการชำระเงิน</h3>
-      <img id="slip-img" class="slip-img-viewer" src="" alt="สลิป" style="display:none;">
-      <p id="slip-no-img" style="color:#9b6bc5;display:none;"></p>
+      <img id="slip-img" class="slip-img-viewer" src="" alt="สลิป">
+      <p id="slip-no-img" class="slip-no-img"></p>
       <div class="slip-meta" id="slip-meta"></div>
       <div class="slip-actions">
         <a id="slip-open-link" class="btn-open-new" href="#" target="_blank" rel="noopener">เปิดในแท็บใหม่</a>
-        <button class="btn-cancel" onclick="closeSlipModal()">ปิด</button>
+        <button class="btn-cancel" id="btn-close-slip">ปิด</button>
       </div>
     </div>
   </div>
@@ -59,12 +60,12 @@
       <input type="hidden" id="msg-bookingCode">
       <input type="hidden" id="msg-status">
       <div class="form-group">
-        <label>ข้อความถึงผู้ใช้ <span style="color:#aaa;font-weight:400;">(ไม่บังคับ)</span></label>
-        <textarea id="admin-message" rows="4" placeholder="เช่น กรุณามาตรงเวลา, เตรียมเอกสารให้พร้อม..." style="width:100%;padding:10px;border-radius:10px;border:1.5px solid #d4b8f0;font-family:inherit;font-size:0.95rem;resize:vertical;"></textarea>
+        <label>ข้อความถึงผู้ใช้ <span class="optional-label">(ไม่บังคับ)</span></label>
+        <textarea id="admin-message" rows="4" placeholder="เช่น กรุณามาตรงเวลา, เตรียมเอกสารให้พร้อม..."></textarea>
       </div>
       <div class="modal-actions">
-        <button class="btn-cancel" onclick="closeMsgModal()">ยกเลิก</button>
-        <button class="btn-save" onclick="confirmStatus()">ยืนยัน</button>
+        <button class="btn-cancel" id="btn-cancel-msg">ยกเลิก</button>
+        <button class="btn-save" id="btn-confirm-msg">ยืนยัน</button>
       </div>
     </div>
   </div>

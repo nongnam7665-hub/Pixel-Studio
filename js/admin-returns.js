@@ -119,4 +119,7 @@ document.getElementById('edit-returnDateDisplay').addEventListener('input', func
     ? `${digits.slice(4,8)}-${digits.slice(2,4)}-${digits.slice(0,2)}` : '';
 });
 
+document.getElementById('btn-cancel').addEventListener('click', closeModal);
+document.getElementById('btn-save').addEventListener('click', saveReturn);
+
 loadReturns();

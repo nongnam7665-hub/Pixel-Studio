@@ -329,5 +329,32 @@ async function deleteTheme(id, name) {
   loadThemes();
 }
 
+document.getElementById('btn-add-room').addEventListener('click', openAddRoom);
+document.getElementById('btn-add-theme').addEventListener('click', openAddTheme);
+document.getElementById('img-upload-area').addEventListener('click', () => document.getElementById('file-input').click());
+document.getElementById('file-input').addEventListener('change', onFileSelected);
+document.getElementById('btn-cancel-room').addEventListener('click', closeModal);
+document.getElementById('btn-save-room').addEventListener('click', saveRoom);
+document.getElementById('theme-img-upload-area').addEventListener('click', () => document.getElementById('theme-file-input').click());
+document.getElementById('theme-file-input').addEventListener('change', onThemeFileSelected);
+document.getElementById('theme-color1-picker').addEventListener('input', function () {
+  document.getElementById('theme-color1-text').value = this.value;
+  updateThemePreview();
+});
+document.getElementById('theme-color1-text').addEventListener('input', function () {
+  if (/^#[0-9a-fA-F]{6}$/.test(this.value)) document.getElementById('theme-color1-picker').value = this.value;
+  updateThemePreview();
+});
+document.getElementById('theme-color2-picker').addEventListener('input', function () {
+  document.getElementById('theme-color2-text').value = this.value;
+  updateThemePreview();
+});
+document.getElementById('theme-color2-text').addEventListener('input', function () {
+  if (/^#[0-9a-fA-F]{6}$/.test(this.value)) document.getElementById('theme-color2-picker').value = this.value;
+  updateThemePreview();
+});
+document.getElementById('btn-cancel-theme').addEventListener('click', closeThemeModal);
+document.getElementById('btn-save-theme').addEventListener('click', saveTheme);
+
 loadRooms();
 loadThemes();

@@ -137,4 +137,7 @@ document.getElementById('edit-shootDateDisplay').addEventListener('input', funct
   }
 });
 
+document.getElementById('btn-cancel').addEventListener('click', closeModal);
+document.getElementById('btn-save').addEventListener('click', saveBooking);
+
 loadBookings();

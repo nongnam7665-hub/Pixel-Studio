@@ -27,21 +27,22 @@
     <a href="admin-packages.html" class="tab-btn">แพ็กเกจ</a>
     <a href="admin-rooms.html"    class="tab-btn active">ห้องสตูดิโอ</a>
     <a href="admin-users.html"    class="tab-btn">สมาชิก</a>
-    <a href="user/home.html"      class="tab-btn" style="margin-left:auto;background:#6a0dad;color:#fff;">🌐 ดูเว็บไซต์</a>  </nav>
+    <a href="user/home.html"      class="tab-btn tab-btn-website">🌐 ดูเว็บไซต์</a>
+  </nav>
 
   <main class="admin-content">
     <section class="tab-panel active">
       <div class="panel-header">
         <h2>ข้อมูลห้องสตูดิโอ</h2>
-        <button class="btn-add-theme" onclick="openAddRoom()">+ เพิ่มห้อง</button>
+        <button class="btn-add-theme" id="btn-add-room">+ เพิ่มห้อง</button>
       </div>
       <div class="rooms-grid" id="rooms-grid"></div>
     </section>
 
-    <section class="tab-panel active" style="margin-top:32px;">
+    <section class="tab-panel active section-themes">
       <div class="panel-header">
         <h2>ธีมการถ่ายภาพ</h2>
-        <button class="btn-add-theme" onclick="openAddTheme()">+ เพิ่มธีม</button>
+        <button class="btn-add-theme" id="btn-add-theme">+ เพิ่มธีม</button>
       </div>
       <div class="themes-admin-grid" id="themes-grid"></div>
     </section>
@@ -60,14 +61,14 @@
       <!-- รูปภาพ -->
       <div class="form-group">
         <label>รูปภาพห้อง</label>
-        <div class="img-upload-area" onclick="document.getElementById('file-input').click()">
+        <div class="img-upload-area" id="img-upload-area">
           <img id="img-preview" class="img-preview" alt="ตัวอย่างรูป">
           <div id="upload-placeholder">
-            <div style="font-size:2rem; color:#b07ee8;">📷</div>
+            <div class="upload-icon">📷</div>
             <div class="upload-hint">คลิกเพื่อเลือกรูปภาพ</div>
             <div class="upload-hint">JPG, PNG, WEBP</div>
           </div>
-          <input type="file" id="file-input" accept="image/*" onchange="onFileSelected(event)">
+          <input type="file" id="file-input" accept="image/*">
         </div>
       </div>
 
@@ -91,8 +92,8 @@
         </select>
       </div>
       <div class="modal-actions">
-        <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
-        <button class="btn-save" onclick="saveRoom()">บันทึก</button>
+        <button class="btn-cancel" id="btn-cancel-room">ยกเลิก</button>
+        <button class="btn-save" id="btn-save-room">บันทึก</button>
       </div>
     </div>
   </div>
@@ -103,20 +104,20 @@
       <h3 class="modal-title" id="theme-modal-title">แก้ไขธีม</h3>
       <input type="hidden" id="theme-edit-id">
 
-      <div id="theme-slug-group" style="display:none;">
+      <div id="theme-slug-group">
         <input type="hidden" id="theme-edit-slug">
       </div>
 
       <div class="form-group">
-        <label>รูปภาพธีม <span style="color:#9b6bc5;font-size:0.82rem;">(ถ้าไม่ใส่จะใช้สีกราเดียนต์)</span></label>
-        <div class="img-upload-area" onclick="document.getElementById('theme-file-input').click()">
+        <label>รูปภาพธีม <span class="hint-label">(ถ้าไม่ใส่จะใช้สีกราเดียนต์)</span></label>
+        <div class="img-upload-area" id="theme-img-upload-area">
           <img id="theme-img-preview" class="img-preview" alt="ตัวอย่าง">
           <div id="theme-upload-placeholder">
-            <div style="font-size:2rem;color:#b07ee8;">🖼️</div>
+            <div class="upload-icon">🖼️</div>
             <div class="upload-hint">คลิกเพื่อเลือกรูปภาพ</div>
             <div class="upload-hint">JPG, PNG, WEBP</div>
           </div>
-          <input type="file" id="theme-file-input" accept="image/*" onchange="onThemeFileSelected(event)">
+          <input type="file" id="theme-file-input" accept="image/*">
         </div>
       </div>
 
@@ -135,34 +136,34 @@
       <div class="form-group">
         <label>สีกราเดียนต์ซ้าย</label>
         <div class="color-row">
-          <input type="color" id="theme-color1-picker" oninput="document.getElementById('theme-color1-text').value=this.value; updateThemePreview()">
-          <input type="text" id="theme-color1-text" placeholder="#ffffff" maxlength="7" oninput="if(/^#[0-9a-fA-F]{6}$/.test(this.value)){document.getElementById('theme-color1-picker').value=this.value;} updateThemePreview()">
+          <input type="color" id="theme-color1-picker">
+          <input type="text" id="theme-color1-text" placeholder="#ffffff" maxlength="7">
         </div>
       </div>
       <div class="form-group">
         <label>สีกราเดียนต์ขวา</label>
         <div class="color-row">
-          <input type="color" id="theme-color2-picker" oninput="document.getElementById('theme-color2-text').value=this.value; updateThemePreview()">
-          <input type="text" id="theme-color2-text" placeholder="#f0f0f0" maxlength="7" oninput="if(/^#[0-9a-fA-F]{6}$/.test(this.value)){document.getElementById('theme-color2-picker').value=this.value;} updateThemePreview()">
+          <input type="color" id="theme-color2-picker">
+          <input type="text" id="theme-color2-text" placeholder="#f0f0f0" maxlength="7">
         </div>
       </div>
       <div class="form-group">
         <label>ตัวอย่างกราเดียนต์</label>
-        <div id="theme-gradient-preview" style="height:52px;border-radius:10px;border:1px solid rgba(106,24,212,0.15);"></div>
+        <div id="theme-gradient-preview"></div>
       </div>
       <div class="form-group">
         <label>ลำดับแสดง</label>
         <input type="number" id="theme-edit-sort" min="0" value="0">
       </div>
       <div class="form-group">
-        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:600;">
-          <input type="checkbox" id="theme-edit-active" checked style="width:auto;accent-color:#6a18d4;">
+        <label class="theme-active-label">
+          <input type="checkbox" id="theme-edit-active" checked class="theme-checkbox">
           เปิดใช้งาน
         </label>
       </div>
       <div class="modal-actions">
-        <button class="btn-cancel" onclick="closeThemeModal()">ยกเลิก</button>
-        <button class="btn-save" onclick="saveTheme()">บันทึก</button>
+        <button class="btn-cancel" id="btn-cancel-theme">ยกเลิก</button>
+        <button class="btn-save" id="btn-save-theme">บันทึก</button>
       </div>
     </div>
   </div>

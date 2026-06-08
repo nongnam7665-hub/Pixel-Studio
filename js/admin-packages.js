@@ -206,4 +206,11 @@ document.getElementById('modal').addEventListener('click', (e) => {
   if (e.target === document.getElementById('modal')) closeModal();
 });
 
+document.getElementById('btn-add-package').addEventListener('click', openAddPackage);
+document.getElementById('img-upload-area').addEventListener('click', () => document.getElementById('file-input').click());
+document.getElementById('file-input').addEventListener('change', onFileSelected);
+document.getElementById('btn-add-feature').addEventListener('click', () => addFeatureRow(''));
+document.getElementById('btn-cancel').addEventListener('click', closeModal);
+document.getElementById('btn-save').addEventListener('click', savePackage);
+
 loadPackages();

@@ -27,7 +27,8 @@
     <a href="admin-packages.html" class="tab-btn">แพ็กเกจ</a>
     <a href="admin-rooms.html"    class="tab-btn">ห้องสตูดิโอ</a>
     <a href="admin-users.html"    class="tab-btn">สมาชิก</a>
-    <a href="user/home.html"      class="tab-btn" style="margin-left:auto;background:#6a0dad;color:#fff;">🌐 ดูเว็บไซต์</a>  </nav>
+    <a href="user/home.html"      class="tab-btn tab-btn-website">🌐 ดูเว็บไซต์</a>
+  </nav>
 
   <main class="admin-content">
     <section class="tab-panel active">
@@ -95,8 +96,8 @@
         <input type="number" id="edit-totalPrice" min="0">
       </div>
       <div class="modal-actions">
-        <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
-        <button class="btn-save" onclick="saveBooking()">บันทึก</button>
+        <button class="btn-cancel" id="btn-cancel">ยกเลิก</button>
+        <button class="btn-save" id="btn-save">บันทึก</button>
       </div>
     </div>
   </div>

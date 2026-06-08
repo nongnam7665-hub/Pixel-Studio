@@ -156,4 +156,8 @@ document.getElementById('slip-modal').addEventListener('click', (e) => {
   if (e.target === document.getElementById('slip-modal')) closeSlipModal();
 });
 
+document.getElementById('btn-close-slip').addEventListener('click', closeSlipModal);
+document.getElementById('btn-cancel-msg').addEventListener('click', closeMsgModal);
+document.getElementById('btn-confirm-msg').addEventListener('click', confirmStatus);
+
 loadApproval();

@@ -132,6 +132,12 @@ body::before {
   font-weight: 800;
 }
 
+.tab-btn-website {
+  margin-left: auto;
+  background: #6a0dad;
+  color: #fff;
+}
+
 /* ── Content ── */
 .admin-content {
   width: min(1400px, 96%);

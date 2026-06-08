@@ -93,4 +93,7 @@ document.getElementById('modal').addEventListener('click', (e) => {
   if (e.target === document.getElementById('modal')) closeModal();
 });
 
+document.getElementById('btn-cancel').addEventListener('click', closeModal);
+document.getElementById('btn-save').addEventListener('click', saveUser);
+
 loadUsers();

@@ -1,3 +1,27 @@
+.section-themes { margin-top: 32px; }
+
+.upload-icon { font-size: 2rem; color: #b07ee8; }
+
+.hint-label { color: #9b6bc5; font-size: 0.82rem; font-weight: 400; }
+
+#theme-slug-group { display: none; }
+
+#theme-gradient-preview {
+  height: 52px;
+  border-radius: 10px;
+  border: 1px solid rgba(106, 24, 212, 0.15);
+}
+
+.theme-active-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.theme-checkbox { width: auto; accent-color: #6a18d4; }
+
 /* ── Rooms Grid ── */
 .rooms-grid {
   display: grid;

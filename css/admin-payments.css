@@ -1,3 +1,7 @@
+#slip-img { display: none; }
+
+.slip-no-img { color: #9b6bc5; display: none; }
+
 /* ── Slip Viewer ── */
 .slip-thumb { 
     width: 48px; 

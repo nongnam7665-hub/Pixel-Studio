@@ -1,3 +1,7 @@
+.upload-icon { font-size: 2rem; color: #b07ee8; }
+
+.optional-label { font-weight: 400; color: #9b6bc5; }
+
 /* ── Packages Page ── */
 .btn-add-theme {
   background: linear-gradient(135deg, #6a18d4, #9b6bc5);
