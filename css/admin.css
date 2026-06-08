@@ -263,9 +263,12 @@ td code {
   background: #e2e3e5; 
   color: #383d41; 
 }
-.badge-cancelled { 
-  background: #f8d7da; 
+.badge-cancelled {
+  background: #f8d7da;
   color: #842029; }
+.badge-expired {
+  background: #6f1d1b;
+  color: #fff; }
 
 /* ── Action Buttons ── */
 .action-btn {

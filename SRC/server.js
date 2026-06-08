@@ -481,7 +481,7 @@ async function handleApi(request, response, pathname, searchParams) {
 
   if (pathname === '/api/admin/bookings/status') {
     const { bookingCode, status, adminMessage } = body;
-    const allowed = ['pending', 'approved', 'active', 'completed', 'cancelled'];
+    const allowed = ['pending', 'approved', 'active', 'completed', 'cancelled', 'expired'];
     if (!bookingCode || !allowed.includes(status)) {
       sendJson(response, 400, { error: 'Invalid bookingCode or status' }); return true;
     }

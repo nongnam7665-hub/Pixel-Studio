@@ -31,6 +31,7 @@ const STATUS_MAP = {
   active:    ['กำลังใช้งาน', 'badge-active'],
   completed: ['เสร็จสิ้น',    'badge-completed'],
   cancelled: ['ยกเลิก',       'badge-cancelled'],
+  expired:   ['หมดเวลา',      'badge-expired'],
 };
 
 function badge(status) {
@@ -132,7 +133,7 @@ async function autoTriggerReturn(b) {
   if (_autoReturned.has(b.bookingCode)) return;
   _autoReturned.add(b.bookingCode);
 
-  await apiFetch('/api/admin/bookings/status', 'POST', { bookingCode: b.bookingCode, status: 'completed' });
+  await apiFetch('/api/admin/bookings/status', 'POST', { bookingCode: b.bookingCode, status: 'expired' });
 
   const today = new Date();
   const returnDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
@@ -155,10 +156,8 @@ async function loadStatus() {
 
   document.getElementById('stat-cards').innerHTML = `
     <div class="stat-card s-pending"><div class="stat-num">${count('pending')}</div><div>รอดำเนินการ</div></div>
-    <div class="stat-card s-approved"><div class="stat-num">${count('approved')}</div><div>อนุมัติแล้ว</div></div>
     <div class="stat-card s-active"><div class="stat-num">${count('active')}</div><div>กำลังใช้งาน</div></div>
-    <div class="stat-card s-completed"><div class="stat-num">${count('completed')}</div><div>เสร็จสิ้น</div></div>
-    <div class="stat-card s-cancelled"><div class="stat-num">${count('cancelled')}</div><div>ยกเลิก</div></div>`;
+    <div class="stat-card s-completed"><div class="stat-num">${count('completed')}</div><div>เสร็จสิ้น</div></div>`;
 
   const tbody = document.getElementById('status-tbody');
   if (!bookings.length) { tbody.innerHTML = emptyRow(9, 'ไม่มีข้อมูล'); return; }
@@ -259,7 +258,7 @@ async function updateBookingStatus(bookingCode, status) {
 
 async function completeAndReturn(bookingCode) {
   if (!confirm(`ยืนยันคืนห้อง ${bookingCode} และเปลี่ยนสถานะเป็นเสร็จสิ้น?`)) return;
-  await apiFetch('/api/admin/bookings/status', 'POST', { bookingCode, status: 'completed' });
+  await apiFetch('/api/admin/bookings/status', 'POST', { bookingCode, status: 'expired' });
   const today = new Date();
   const returnDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
   await apiFetch('/api/returns', 'POST', {
